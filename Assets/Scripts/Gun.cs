@@ -20,7 +20,7 @@ public class Gun : MonoBehaviour
             if (Input.GetButton("Fire1"))
             {
                 timer = 0f;
-                FireGun();
+                //FireGun();
             }
         }
     }
