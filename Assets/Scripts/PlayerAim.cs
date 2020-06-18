@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿
 using UnityEngine;
 
 public class PlayerAim : MonoBehaviour
@@ -11,7 +10,6 @@ public class PlayerAim : MonoBehaviour
     public float vertical;
 
     private GameObject playerHips;
-
     private Animator animator;
 
     private void Start()
@@ -27,8 +25,8 @@ public class PlayerAim : MonoBehaviour
     {
         horizontal = Input.GetAxis("Horizontal");
         vertical = Input.GetAxis("Vertical");
-        animator.SetFloat("VelX", horizontal);
-        animator.SetFloat("VelY", vertical);
+        animator.SetFloat("MoveX", horizontal);
+        animator.SetFloat("MoveY", vertical);
         float yawCamera = mainCamera.transform.rotation.eulerAngles.y;
         Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
         targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
