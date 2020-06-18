@@ -11,8 +11,6 @@ public class PlayerAim : MonoBehaviour
     public float vertical;
 
     private GameObject playerHips;
-    private GameObject playerAbdomen;
-    private GameObject playerTorso;
 
     private Animator animator;
 
@@ -23,8 +21,6 @@ public class PlayerAim : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         animator = GetComponent<Animator>();
         playerHips = GameObject.FindGameObjectWithTag("PlayerHips");
-        playerAbdomen = GameObject.FindGameObjectWithTag("PlayerAbdomen");
-        playerTorso = GameObject.FindGameObjectWithTag("PlayerTorso");
     }
 
     private void FixedUpdate()
@@ -51,8 +47,6 @@ public class PlayerAim : MonoBehaviour
             targetAngle = -offset;
         }
         transform.eulerAngles = new Vector3(0, yawCamera + targetAngle, 0);
-        playerHips.transform.localEulerAngles = new Vector3(0f, -targetAngle / 2, 0f);
-        playerAbdomen.transform.localEulerAngles = new Vector3(0f, -targetAngle / 3, 0f);
-        playerTorso.transform.localEulerAngles = new Vector3(0f, -targetAngle / 2, 0f);
+        playerHips.transform.localEulerAngles = new Vector3(0f, -targetAngle, 0f);
     }
 }

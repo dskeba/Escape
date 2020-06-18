@@ -8,6 +8,9 @@ TagManager:
   - PlayerHips
   - PlayerAbdomen
   - PlayerTorso
+  - PlayerShoulderL
+  - PlayerShoulderR
+  - PlayerNeck
   layers:
   - Default
   - TransparentFX

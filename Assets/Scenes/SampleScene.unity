@@ -2610,7 +2610,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1985967919}
-  m_LocalRotation: {x: -0.21243484, y: -0.000000002288877, z: 0.00000001301519, w: 0.9771753}
+  m_LocalRotation: {x: -0.21243484, y: -0.000000013268014, z: 0.000000010628252, w: 0.9771753}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2631,6 +2631,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3294457136393139664, guid: e3004a86c8f6500488a375eb41ed9a3e,
+        type: 3}
+      propertyPath: m_TagString
+      value: PlayerNeck
+      objectReference: {fileID: 0}
+    - target: {fileID: 3817799122796048432, guid: e3004a86c8f6500488a375eb41ed9a3e,
+        type: 3}
+      propertyPath: m_TagString
+      value: PlayerShoulderR
+      objectReference: {fileID: 0}
     - target: {fileID: 4775674987413752865, guid: e3004a86c8f6500488a375eb41ed9a3e,
         type: 3}
       propertyPath: m_Constraints
@@ -2700,6 +2710,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 8572803766371935480, guid: e3004a86c8f6500488a375eb41ed9a3e,
+        type: 3}
+      propertyPath: m_TagString
+      value: PlayerShoulderL
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e3004a86c8f6500488a375eb41ed9a3e, type: 3}
