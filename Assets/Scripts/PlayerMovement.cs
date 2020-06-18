@@ -5,28 +5,50 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     private float speed = 6f;
-    private float jumpForce = 10f;
+    private float jumpForce = 15f;
 
     private float jumpTimer;
-    private float jumpRate = 2f;
+    private float jumpRate = 1f;
     private float jumpDelay = 0.2f;
 
+    private Camera mainCamera;
+
     bool isGrounded = false;
-    bool performJump = false;
     Rigidbody rb;
     private Animator animator;
 
+    private bool running = false;
+
+    private Vector2 input;
+
     private void Start()
     {
+        mainCamera = Camera.main;
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
     }
 
     private void Update()
     {
-        if (Input.GetButtonDown("Jump"))
+        jumpTimer += Time.deltaTime;
+        if (Input.GetButtonDown("Jump") && CanJump())
         {
-            performJump = true;
+            isGrounded = false;
+            jumpTimer = 0f;
+            animator.SetBool("Jumping", true);
+            StartCoroutine(DelayJump());
+        }
+
+        if (Input.GetButton("Fire3"))
+        {
+            running = true;
+            animator.SetBool("Running", true);
+            speed = 10f;
+        } else
+        {
+            running = false;
+            animator.SetBool("Running", false);
+            speed = 6f;
         }
     }
 
@@ -34,21 +56,11 @@ public class PlayerMovement : MonoBehaviour
     {
         isGrounded = true;
         animator.SetBool("Jumping", false);
-        Debug.Log("FALSE");
     }
 
-    private void CheckJump()
+    private bool CanJump()
     {
-        jumpTimer += Time.deltaTime;
-        if (performJump && jumpTimer >= jumpRate && isGrounded)
-        {
-            performJump = false;
-            isGrounded = false;
-            jumpTimer = 0f;
-            animator.SetBool("Jumping", true);
-            StartCoroutine(DelayJump());
-            //rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-        }
+        return (jumpTimer >= jumpRate) && isGrounded;
     }
 
     private IEnumerator DelayJump()
@@ -59,17 +71,15 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        CheckJump();
-
-        var camera = Camera.main;
-        Vector2 input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         input = Vector2.ClampMagnitude(input, 1);
-        var forward = camera.transform.forward;
-        var right = camera.transform.right;
+        var forward = mainCamera.transform.forward;
+        var right = mainCamera.transform.right;
         forward.y = 0f;
         right.y = 0f;
         forward.Normalize();
         right.Normalize();
         transform.position += (forward * input.y + right * input.x) * Time.deltaTime * speed;
     }
+
 }
