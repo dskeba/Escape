@@ -6,11 +6,10 @@ TagManager:
   tags:
   - PlayerPalm
   - PlayerHips
+  - BulletTracer
   - PlayerAbdomen
   - PlayerTorso
-  - PlayerShoulderL
-  - PlayerShoulderR
-  - PlayerNeck
+  - MuzzleFlash
   layers:
   - Default
   - TransparentFX
