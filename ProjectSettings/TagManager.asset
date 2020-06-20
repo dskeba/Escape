@@ -6,10 +6,10 @@ TagManager:
   tags:
   - PlayerPalm
   - PlayerHips
-  - BulletTracer
   - PlayerAbdomen
   - PlayerTorso
   - MuzzleFlash
+  - Tracer
   layers:
   - Default
   - TransparentFX
