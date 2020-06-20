@@ -3,14 +3,11 @@ using UnityEngine;
 
 public class PlayerAim : MonoBehaviour
 {
-    public float turnSpeed = 1f;
-    Camera mainCamera;
-    public float targetAngle;
-    public float horizontal;
-    public float vertical;
-
-    private GameObject playerHips;
+    private Camera mainCamera;
+    private float targetAngle;
+    private GameObject playerHipsObject;
     private Animator animator;
+    private Vector3 input;
 
     private void Start()
     {
@@ -18,17 +15,18 @@ public class PlayerAim : MonoBehaviour
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         animator = GetComponent<Animator>();
-        playerHips = GameObject.FindGameObjectWithTag("PlayerHips");
+        playerHipsObject = GameObject.FindGameObjectWithTag("PlayerHips");
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
-        horizontal = Input.GetAxis("Horizontal");
-        vertical = Input.GetAxis("Vertical");
-        animator.SetFloat("MoveX", horizontal);
-        animator.SetFloat("MoveY", vertical);
+        input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        input = Vector2.ClampMagnitude(input, 1);
+        animator.SetFloat("MoveX", input.x);
+        animator.SetFloat("MoveY", input.y);
+
         float yawCamera = mainCamera.transform.rotation.eulerAngles.y;
-        Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
+        Vector3 direction = new Vector3(input.x, 0f, input.y).normalized;
         targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
         if (targetAngle == 180)
         {
@@ -45,6 +43,6 @@ public class PlayerAim : MonoBehaviour
             targetAngle = -offset;
         }
         transform.eulerAngles = new Vector3(0, yawCamera + targetAngle, 0);
-        playerHips.transform.localEulerAngles = new Vector3(0f, -targetAngle, 0f);
+        playerHipsObject.transform.localEulerAngles = new Vector3(0f, -targetAngle, 0f);
     }
 }

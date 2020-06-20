@@ -1,24 +1,21 @@
 ﻿
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Rendering.PostProcessing;
 
 public class PlayerMovement : MonoBehaviour
 {
+    public PostProcessProfile postProcessProfile;
+
     private float speed = 6f;
     private float jumpForce = 15f;
-
     private float jumpTimer;
     private float jumpRate = 1f;
     private float jumpDelay = 0.2f;
-
     private Camera mainCamera;
-
-    bool isGrounded = false;
-    Rigidbody rb;
+    private bool isGrounded = false;
+    private Rigidbody rb;
     private Animator animator;
-
-    private bool running = false;
-
     private Vector2 input;
 
     private void Start()
@@ -30,7 +27,11 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        input = Vector2.ClampMagnitude(input, 1);
+
         jumpTimer += Time.deltaTime;
+
         if (Input.GetButtonDown("Jump") && CanJump())
         {
             isGrounded = false;
@@ -39,14 +40,22 @@ public class PlayerMovement : MonoBehaviour
             StartCoroutine(DelayJump());
         }
 
-        if (Input.GetButton("Fire3"))
+        Vignette vignette;
+        ChromaticAberration chromaticAberration;
+        postProcessProfile.TryGetSettings<Vignette>(out vignette);
+        postProcessProfile.TryGetSettings<ChromaticAberration>(out chromaticAberration);
+        if (Input.GetButton("Fire3") && input.y > 0)
         {
-            running = true;
+            vignette.intensity.value = 0.2f;
+            chromaticAberration.intensity.value = 0.3f;
             animator.SetBool("Running", true);
             speed = 10f;
-        } else
+            
+        } 
+        else
         {
-            running = false;
+            vignette.intensity.value = 0.2f;
+            chromaticAberration.intensity.value = 0f;
             animator.SetBool("Running", false);
             speed = 6f;
         }
@@ -71,8 +80,6 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-        input = Vector2.ClampMagnitude(input, 1);
         var forward = mainCamera.transform.forward;
         var right = mainCamera.transform.right;
         forward.y = 0f;

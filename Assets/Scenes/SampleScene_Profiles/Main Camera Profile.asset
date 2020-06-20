@@ -1,31 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-7227141796493866222
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6050e2d5de785ce4d931e4dbdbf2d755, type: 3}
-  m_Name: ChromaticAberration
-  m_EditorClassIdentifier: 
-  active: 1
-  enabled:
-    overrideState: 1
-    value: 1
-  spectralLut:
-    overrideState: 0
-    value: {fileID: 0}
-    defaultState: 1
-  intensity:
-    overrideState: 1
-    value: 0.168
-  fastMode:
-    overrideState: 0
-    value: 0
 --- !u!114 &-5941567412762636143
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -53,16 +27,16 @@ MonoBehaviour:
     value: {x: 0.5, y: 0.5}
   intensity:
     overrideState: 1
-    value: 0.45
+    value: 0.2
   smoothness:
     overrideState: 1
-    value: 0.2
+    value: 1
   roundness:
     overrideState: 1
     value: 1
   rounded:
     overrideState: 0
-    value: 0
+    value: 1
   mask:
     overrideState: 0
     value: {fileID: 0}
@@ -87,7 +61,7 @@ MonoBehaviour:
     overrideState: 1
     value: 1
   colored:
-    overrideState: 0
+    overrideState: 1
     value: 1
   intensity:
     overrideState: 1
@@ -1451,11 +1425,11 @@ MonoBehaviour:
     value: 1
   dirtTexture:
     overrideState: 0
-    value: {fileID: 0}
+    value: {fileID: 10307, guid: 0000000000000000f000000000000000, type: 0}
     defaultState: 1
   dirtIntensity:
     overrideState: 0
-    value: 0
+    value: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1476,7 +1450,33 @@ MonoBehaviour:
   - {fileID: 9124213547765414974}
   - {fileID: 6708900899294381362}
   - {fileID: -4868998542350734837}
-  - {fileID: -7227141796493866222}
+  - {fileID: 1142311733057679611}
+--- !u!114 &1142311733057679611
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6050e2d5de785ce4d931e4dbdbf2d755, type: 3}
+  m_Name: ChromaticAberration
+  m_EditorClassIdentifier: 
+  active: 1
+  enabled:
+    overrideState: 1
+    value: 1
+  spectralLut:
+    overrideState: 0
+    value: {fileID: 0}
+    defaultState: 1
+  intensity:
+    overrideState: 1
+    value: 0
+  fastMode:
+    overrideState: 0
+    value: 0
 --- !u!114 &1853812785315018623
 MonoBehaviour:
   m_ObjectHideFlags: 3
