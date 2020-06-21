@@ -7,6 +7,7 @@ public class PlayerAim : MonoBehaviour
     private float targetAngle;
     private GameObject playerHipsObject;
     private Animator animator;
+    private Rigidbody rb;
     private Vector3 input;
 
     private void Start()
@@ -15,6 +16,7 @@ public class PlayerAim : MonoBehaviour
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         animator = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody>();
         playerHipsObject = GameObject.FindGameObjectWithTag("PlayerHips");
     }
 
@@ -43,6 +45,9 @@ public class PlayerAim : MonoBehaviour
             targetAngle = -offset;
         }
         transform.eulerAngles = new Vector3(0, yawCamera + targetAngle, 0);
+        //Quaternion deltaRotation = Quaternion.Euler(0, yawCamera + targetAngle, 0);
+        //rb.MoveRotation(deltaRotation);
         playerHipsObject.transform.localEulerAngles = new Vector3(0f, -targetAngle, 0f);
+
     }
 }

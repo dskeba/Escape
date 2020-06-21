@@ -47,7 +47,7 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetButton("Fire3") && input.y > 0)
         {
             vignette.intensity.value = 0.2f;
-            chromaticAberration.intensity.value = 0.3f;
+            chromaticAberration.intensity.value = 0.35f;
             animator.SetBool("Running", true);
             speed = 10f;
             
@@ -86,7 +86,9 @@ public class PlayerMovement : MonoBehaviour
         right.y = 0f;
         forward.Normalize();
         right.Normalize();
-        transform.position += (forward * input.y + right * input.x) * Time.deltaTime * speed;
+        var destination = transform.position + (forward * input.y + right * input.x) * Time.deltaTime * speed;
+        rb.MovePosition(destination);
+        //transform.position += (forward * input.y + right * input.x) * Time.deltaTime * speed;
     }
 
 }

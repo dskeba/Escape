@@ -50,6 +50,9 @@ public class Gun : MonoBehaviour
             if (hit.collider.gameObject.layer != LayerMask.NameToLayer("Ground"))
             {
                 hit.collider.transform.localScale = Vector3.zero;
+                var parentTransform = hit.collider.transform.root;
+                var colliderHealth = parentTransform.GetComponent<ZombieHealth>();
+                colliderHealth.TakeDamage(50, hit.point);
             }
             tracerEndPoint = hit.point;
         }
