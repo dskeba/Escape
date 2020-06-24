@@ -45,8 +45,6 @@ public class PlayerAim : MonoBehaviour
             targetAngle = -offset;
         }
         transform.eulerAngles = new Vector3(0, yawCamera + targetAngle, 0);
-        //Quaternion deltaRotation = Quaternion.Euler(0, yawCamera + targetAngle, 0);
-        //rb.MoveRotation(deltaRotation);
         playerHipsObject.transform.localEulerAngles = new Vector3(0f, -targetAngle, 0f);
 
     }

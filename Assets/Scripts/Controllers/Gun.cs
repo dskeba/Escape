@@ -1,32 +1,48 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
+using System.Collections;
 
-public class Gun : MonoBehaviour
+public abstract class Gun : MonoBehaviour
 {
-    private float fireRate = 0.2f;
-    private float fireRateTimer;
     public Transform firePoint;
-    private GameObject tracerObject;
-    private LineRenderer tracerLineRenderer;
-    private GameObject muzzleFlashObject;
-    private Light muzzleFlashLight;
-    private float muzzleFlashSeconds = 0.015f;
-    private float tracerSeconds = 0.015f;
-    private Vector3 tracerStartPoint;
-    private Vector3 tracerEndPoint;
-    private float tracerMaxDistance = 10000f;
+    public abstract bool Equiped { get; set; }
 
-    private void Start()
+    protected float fireRate = 1f;
+
+    float fireRateTimer = 0f;
+    GameObject tracerObject;
+    LineRenderer tracerLineRenderer;
+    GameObject muzzleFlashObject;
+    Light muzzleFlashLight;
+    float muzzleFlashSeconds = 0.015f;
+    float tracerSeconds = 0.015f;
+    Vector3 tracerStartPoint;
+    Vector3 tracerEndPoint;
+    float tracerMaxDistance = 10000f;
+
+    protected abstract void OnAwake();
+    protected abstract void OnStart();
+    protected abstract void OnFixedUpdate();
+    protected abstract void OnUpdate();
+    protected abstract void OnFireGun();
+
+    void Awake()
+    {
+        OnAwake();
+    }
+
+    void Start()
     {
         tracerObject = GameObject.FindGameObjectWithTag("Tracer");
         tracerLineRenderer = tracerObject.GetComponent<LineRenderer>();
         muzzleFlashObject = GameObject.FindGameObjectWithTag("MuzzleFlash");
         muzzleFlashLight = muzzleFlashObject.GetComponent<Light>();
-        
+
+        OnStart();
     }
 
-    private void Update()
+    void Update()
     {
+        if (!Equiped) { return; }
         fireRateTimer += Time.deltaTime;
         if (fireRateTimer >= fireRate)
         {
@@ -36,11 +52,17 @@ public class Gun : MonoBehaviour
                 FireGun();
             }
         }
+
+        OnUpdate();
     }
 
-    private void FireGun()
+    void FixedUpdate()
     {
-        SoundManager.Instance.Play(MixerGroup.Sound, "Sounds/assault_rifle_shot", 0.5f);
+        OnFixedUpdate();
+    }
+
+    public void FireGun()
+    {
         Ray ray = Camera.main.ViewportPointToRay(Vector3.one * 0.5f);
         tracerStartPoint = firePoint.position;
         tracerEndPoint = ray.direction * tracerMaxDistance;
@@ -49,15 +71,17 @@ public class Gun : MonoBehaviour
         {
             if (hit.collider.gameObject.layer != LayerMask.NameToLayer("Ground"))
             {
-                hit.collider.transform.localScale = Vector3.zero;
+                //hit.collider.transform.localScale = Vector3.zero;
                 var parentTransform = hit.collider.transform.root;
                 var colliderHealth = parentTransform.GetComponent<ZombieHealth>();
-                colliderHealth.TakeDamage(50, hit.point);
+                colliderHealth.TakeDamage(25, hit.point);
             }
             tracerEndPoint = hit.point;
         }
         StartCoroutine(DrawTracerForSeconds(tracerSeconds));
         StartCoroutine(DrawMuzzleFlashForSeconds(muzzleFlashSeconds));
+
+        OnFireGun();
     }
 
     private IEnumerator DrawMuzzleFlashForSeconds(float seconds)

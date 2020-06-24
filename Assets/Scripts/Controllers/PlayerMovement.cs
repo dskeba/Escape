@@ -88,7 +88,6 @@ public class PlayerMovement : MonoBehaviour
         right.Normalize();
         var destination = transform.position + (forward * input.y + right * input.x) * Time.deltaTime * speed;
         rb.MovePosition(destination);
-        //transform.position += (forward * input.y + right * input.x) * Time.deltaTime * speed;
     }
 
 }
