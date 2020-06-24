@@ -5,8 +5,8 @@ public interface IInventoryItem
 {
     string Name { get; }
     Sprite Image { get; }
-    bool Equiped { get; set; }
     void OnPickup();
+    void OnDrop();
 }
 
 public class InventoryEventArgs : EventArgs

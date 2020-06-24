@@ -1,56 +1,50 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using System;
 using System.Linq;
 
 public class Inventory : MonoBehaviour
 {
-    private const int SLOTS = 5;
+    private const int MAX_IEMS = 5;
 
     private List<IInventoryItem> items;
     private int equippedItemIndex = -1;
-    private IInventoryItem equippedItem;
 
     public event EventHandler<InventoryEventArgs> ItemAdded;
     public event EventHandler<InventoryEventArgs> ItemEquipped;
     public event EventHandler<InventoryEventArgs> ItemUnequipped;
+    public event EventHandler<InventoryEventArgs> ItemDropped;
 
     public Inventory()
     {
         items = new List<IInventoryItem>();
-/*        for (int i = 0; i < SLOTS; i++)
-        {
-            items.Insert(i, null);
-        }*/
     }
 
     public void AddItem(IInventoryItem item)
     {
-        if (items.Count < SLOTS)
+        if (items.Count < MAX_IEMS)
         {
-            Collider collider = (item as MonoBehaviour).GetComponent<Collider>();
-            if (collider.enabled)
+            items.Insert(0, item);
+            item.OnPickup();
+            if (ItemAdded != null)
             {
-                collider.enabled = false;
-                items.Insert(0, item);
-                Debug.Log(items[0]);
-                item.OnPickup();
-                if (ItemAdded != null)
-                {
-                    ItemAdded(this, new InventoryEventArgs(item));
-                }
+                ItemAdded(this, new InventoryEventArgs(item));
             }
         }
     }
 
-    public void EquipItem(int index, IInventoryItem item)
+    public void EquipItem(int index)
     {
+        if (items.ElementAtOrDefault(index) == null) { return; }
+        if (equippedItemIndex == index)
+        {
+            UnequipItem();
+            return;
+        }
         equippedItemIndex = index;
-        equippedItem = item;
         if (ItemEquipped != null)
         {
-            ItemEquipped(this, new InventoryEventArgs(item));
+            ItemEquipped(this, new InventoryEventArgs(items[equippedItemIndex]));
         }
     }
 
@@ -58,24 +52,46 @@ public class Inventory : MonoBehaviour
     {
         if (ItemUnequipped != null)
         {
-            ItemUnequipped(this, new InventoryEventArgs(equippedItem));
+            ItemUnequipped(this, new InventoryEventArgs(items[equippedItemIndex]));
         }
         equippedItemIndex = -1;
-        equippedItem = null;
+    }
+
+    public void DropItem()
+    {
+        if (equippedItemIndex < 0) { return; }
+        items[equippedItemIndex].OnDrop();
+        if (ItemDropped != null)
+        {
+            ItemDropped(this, new InventoryEventArgs(items[equippedItemIndex]));
+        }
+        items.RemoveAt(equippedItemIndex);
+        equippedItemIndex = -1;
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown("1") && items.ElementAtOrDefault(0) != null)
+        CheckSlotKeys();
+        CheckDropKey();
+    }
+
+    private void CheckSlotKeys()
+    {
+        for (int i = 0; i < MAX_IEMS; i++)
         {
-            if (equippedItemIndex == 0)
+            String keyCode = (i + 1).ToString();
+            if (Input.GetKeyDown(keyCode))
             {
-                UnequipItem();
+                EquipItem(i);
             }
-            else
-            {
-                EquipItem(0, items[0]);
-            }
+        }
+    }
+
+    private void CheckDropKey()
+    {
+        if (Input.GetKeyDown("g"))
+        {
+            DropItem();
         }
     }
 }

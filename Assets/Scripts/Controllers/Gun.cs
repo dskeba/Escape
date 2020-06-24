@@ -4,7 +4,7 @@ using System.Collections;
 public abstract class Gun : MonoBehaviour
 {
     public Transform firePoint;
-    public abstract bool Equiped { get; set; }
+    public abstract bool Equipped { get; set; }
 
     protected float fireRate = 1f;
 
@@ -42,7 +42,7 @@ public abstract class Gun : MonoBehaviour
 
     void Update()
     {
-        if (!Equiped) { return; }
+        if (!Equipped) { return; }
         fireRateTimer += Time.deltaTime;
         if (fireRateTimer >= fireRate)
         {

@@ -6,11 +6,11 @@ public class AssaultRifle : Gun, IInventoryItem
 
     public string Name { get; set; }
     public Sprite Image { get; set; }
-    public override bool Equiped { get; set; }
+    public override bool Equipped { get; set; }
 
     protected override void OnAwake() {
         base.fireRate = 0.2f;
-        Equiped = false;
+        Equipped = false;
     }
 
     protected override void OnStart() { }
@@ -26,7 +26,13 @@ public class AssaultRifle : Gun, IInventoryItem
 
     void IInventoryItem.OnPickup()
     {
-        Equiped = true;
+        Equipped = true;
         gameObject.SetActive(false);
+    }
+
+    void IInventoryItem.OnDrop()
+    {
+        Equipped = false;
+        gameObject.SetActive(true);
     }
 }

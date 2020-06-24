@@ -26,6 +26,7 @@ public class Player : MonoBehaviour
         inventory.ItemAdded += Inventory_ItemAdded;
         inventory.ItemEquipped += Inventory_ItemEquipped;
         inventory.ItemUnequipped += Inventory_ItemUnequipped;
+        inventory.ItemDropped += Inventory_ItemDropped;
     }
 
     private void Inventory_ItemAdded(object sender, InventoryEventArgs args)
@@ -44,7 +45,6 @@ public class Player : MonoBehaviour
 
     private void Inventory_ItemEquipped(object sender, InventoryEventArgs args)
     {
-        Debug.Log("Inventory_ItemEquiped");
         IInventoryItem item = args.Item;
         GameObject goItem = (item as MonoBehaviour).gameObject;
         goItem.SetActive(true);
@@ -64,7 +64,18 @@ public class Player : MonoBehaviour
         animator.SetBool("ItemEquipped", false);
     }
 
-        private void Update()
+    private void Inventory_ItemDropped(object sender, InventoryEventArgs args)
+    {
+        IInventoryItem item = args.Item;
+        GameObject goItem = (item as MonoBehaviour).gameObject;
+        goItem.transform.parent = transform.parent;
+        goItem.transform.position = transform.position + new Vector3(2f, 0f, 2f);
+        Collider collider = (item as MonoBehaviour).GetComponent<Collider>();
+        collider.enabled = true;
+        animator.SetBool("ItemEquipped", false);
+    }
+
+    private void Update()
     {
         if (Input.GetKey("escape"))
         {
@@ -77,6 +88,8 @@ public class Player : MonoBehaviour
         IInventoryItem item = collision.collider.GetComponent<IInventoryItem>();
         if (item != null)
         {
+            Collider collider = (item as MonoBehaviour).GetComponent<Collider>();
+            collider.enabled = false;
             inventory.AddItem(item);
         }
     }
