@@ -8,7 +8,7 @@ public class PlayerMovement : MonoBehaviour
     public PostProcessProfile postProcessProfile;
 
     private float speed = 6f;
-    private float jumpForce = 15f;
+    private float jumpForce = 18f;
     private float jumpTimer;
     private float jumpRate = 1f;
     private float jumpDelay = 0.2f;
@@ -49,7 +49,7 @@ public class PlayerMovement : MonoBehaviour
             vignette.intensity.value = 0.2f;
             chromaticAberration.intensity.value = 0.35f;
             animator.SetBool("Running", true);
-            speed = 10f;
+            speed = 11f;
             
         } 
         else

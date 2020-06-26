@@ -1,11 +1,20 @@
 ﻿
+using System.Dynamic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AssaultRifle : Gun, IInventoryItem
 {
 
     public string Name { get; set; }
-    public Sprite Image { get; set; }
+    public Sprite Image
+    {
+        get
+        {
+            Sprite sprite = Resources.Load<Sprite>("Sprites/Assault_Rifle");
+            return sprite;
+        }
+    }
     public override bool Equipped { get; set; }
 
     protected override void OnAwake() {
