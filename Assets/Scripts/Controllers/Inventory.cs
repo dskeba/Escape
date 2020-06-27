@@ -42,6 +42,7 @@ public class Inventory : MonoBehaviour
             return;
         }
         equippedItemIndex = index;
+        items[equippedItemIndex].IsEquipped = true;
         if (ItemEquipped != null)
         {
             ItemEquipped(this, new InventoryEventArgs(items[equippedItemIndex]));
@@ -50,6 +51,7 @@ public class Inventory : MonoBehaviour
 
     public void UnequipItem()
     {
+        items[equippedItemIndex].IsEquipped = false;
         if (ItemUnequipped != null)
         {
             ItemUnequipped(this, new InventoryEventArgs(items[equippedItemIndex]));
@@ -60,6 +62,7 @@ public class Inventory : MonoBehaviour
     public void DropItem()
     {
         if (equippedItemIndex < 0) { return; }
+        items[equippedItemIndex].IsEquipped = false;
         items[equippedItemIndex].OnDrop();
         if (ItemDropped != null)
         {

@@ -5,6 +5,7 @@ public interface IInventoryItem
 {
     string Name { get; }
     Sprite Image { get; }
+    bool IsEquipped { get; set; }
     void OnPickup();
     void OnDrop();
 }

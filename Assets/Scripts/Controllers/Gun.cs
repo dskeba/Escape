@@ -1,13 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public abstract class Gun : MonoBehaviour
+public abstract class Gun : InventoryItemBase
 {
-    public Transform firePoint;
-    public abstract bool Equipped { get; set; }
-
-    protected float fireRate = 1f;
-
     float fireRateTimer = 0f;
     GameObject tracerObject;
     LineRenderer tracerLineRenderer;
@@ -19,11 +14,14 @@ public abstract class Gun : MonoBehaviour
     Vector3 tracerEndPoint;
     float tracerMaxDistance = 10000f;
 
+    protected float fireRate = 1f;
     protected abstract void OnAwake();
     protected abstract void OnStart();
     protected abstract void OnFixedUpdate();
     protected abstract void OnUpdate();
     protected abstract void OnFireGun();
+
+    public Transform firePoint;
 
     void Awake()
     {
@@ -42,7 +40,8 @@ public abstract class Gun : MonoBehaviour
 
     void Update()
     {
-        if (!Equipped) { return; }
+        if (!base.IsEquipped) { return; }
+
         fireRateTimer += Time.deltaTime;
         if (fireRateTimer >= fireRate)
         {
@@ -58,6 +57,8 @@ public abstract class Gun : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (!base.IsEquipped) { return; }
+
         OnFixedUpdate();
     }
 

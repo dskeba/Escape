@@ -1,11 +1,9 @@
 ﻿
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
     public Inventory inventory;
-    public bool Equiped;
 
     private GameObject palmObject;
     private Animator animator;
@@ -46,8 +44,6 @@ public class Player : MonoBehaviour
         GameObject goItem = (item as MonoBehaviour).gameObject;
         goItem.transform.parent = transform.parent;
         goItem.transform.position = transform.position + new Vector3(2f, 0f, 2f);
-        Collider collider = (item as MonoBehaviour).GetComponent<Collider>();
-        collider.enabled = true;
         animator.SetBool("ItemEquipped", false);
     }
 
@@ -64,8 +60,6 @@ public class Player : MonoBehaviour
         IInventoryItem item = collision.collider.GetComponent<IInventoryItem>();
         if (item != null)
         {
-            Collider collider = (item as MonoBehaviour).GetComponent<Collider>();
-            collider.enabled = false;
             inventory.AddItem(item);
         }
     }

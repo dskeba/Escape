@@ -1,25 +1,28 @@
 ﻿
-using System.Dynamic;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class AssaultRifle : Gun, IInventoryItem
+public class AssaultRifle : Gun
 {
+    private Sprite _image;
 
-    public string Name { get; set; }
-    public Sprite Image
+    public override string Name {
+        get
+        {
+            return "Assault Rifle";
+        }
+    }
+
+    public override Sprite Image
     {
         get
         {
-            Sprite sprite = Resources.Load<Sprite>("Sprites/Assault_Rifle");
-            return sprite;
+            return _image;
         }
     }
-    public override bool Equipped { get; set; }
 
     protected override void OnAwake() {
         base.fireRate = 0.2f;
-        Equipped = false;
+        _image = Resources.Load<Sprite>("Sprites/Assault_Rifle");
     }
 
     protected override void OnStart() { }
@@ -31,17 +34,5 @@ public class AssaultRifle : Gun, IInventoryItem
     protected override void OnFireGun()
     {
         SoundManager.Instance.Play(MixerGroup.Sound, "Sounds/assault_rifle_shot", 0.5f);
-    }
-
-    void IInventoryItem.OnPickup()
-    {
-        Equipped = true;
-        gameObject.SetActive(false);
-    }
-
-    void IInventoryItem.OnDrop()
-    {
-        Equipped = false;
-        gameObject.SetActive(true);
     }
 }
