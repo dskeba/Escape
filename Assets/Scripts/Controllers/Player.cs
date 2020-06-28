@@ -15,11 +15,12 @@ public class Player : MonoBehaviour
         inventory.ItemEquipped += Inventory_ItemEquipped;
         inventory.ItemUnequipped += Inventory_ItemUnequipped;
         inventory.ItemDropped += Inventory_ItemDropped;
+
+        SoundManager.Instance.Play(MixerGroup.Music, "Sounds/creeprs", 0.5f);
     }
 
     private void Inventory_ItemEquipped(object sender, InventoryEventArgs args)
     {
-        Debug.Log("ITEM EQUIPPED");
         IInventoryItem item = args.Item;
         GameObject goItem = (item as MonoBehaviour).gameObject;
         goItem.SetActive(true);
@@ -35,7 +36,6 @@ public class Player : MonoBehaviour
     {
         IInventoryItem item = args.Item;
         GameObject goItem = (item as MonoBehaviour).gameObject;
-        Debug.Log("ITEM UNEQUIPPED");
         goItem.SetActive(false);
         animator.SetBool("ItemEquipped", false);
     }

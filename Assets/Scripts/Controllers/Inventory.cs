@@ -7,7 +7,7 @@ public class Inventory : MonoBehaviour
 {
     private const int MAX_ITEMS = 9;
 
-    private List<IInventoryItem> items;
+    private Dictionary<int, IInventoryItem> items;
     private int equippedItemIndex = -1;
 
     public event EventHandler<InventoryEventArgs> ItemAdded;
@@ -17,7 +17,7 @@ public class Inventory : MonoBehaviour
 
     public Inventory()
     {
-        items = new List<IInventoryItem>();
+        items = new Dictionary<int, IInventoryItem>();
     }
 
     public void AddItem(IInventoryItem item)
@@ -26,9 +26,9 @@ public class Inventory : MonoBehaviour
         {
             for (int i = 0; i < MAX_ITEMS; i++)
             {
-                if (items.ElementAtOrDefault(i) == null)
+                if (!items.ContainsKey(i))
                 {
-                    items.Insert(i, item);
+                    items.Add(i, item);
                     item.OnPickup();
                     if (ItemAdded != null)
                     {
@@ -42,15 +42,13 @@ public class Inventory : MonoBehaviour
 
     public void EquipItem(int index)
     {
-        Debug.Log("equippedItemIndex" + equippedItemIndex);
-        if (items.ElementAtOrDefault(index) == null) { return; }
+        if (!items.ContainsKey(index)) { return; }
         if (equippedItemIndex == index) {
             UnequipItem(equippedItemIndex);
             return;
         } else if (equippedItemIndex >= 0) {
             UnequipItem(equippedItemIndex);
         }
-        Debug.Log("index" + index);
         equippedItemIndex = index;
         items[equippedItemIndex].IsEquipped = true;
         if (ItemEquipped != null)
@@ -61,8 +59,7 @@ public class Inventory : MonoBehaviour
 
     public void UnequipItem(int index)
     {
-        Debug.Log("Unequip " + index);
-        items[equippedItemIndex].IsEquipped = false;
+        items[index].IsEquipped = false;
         if (ItemUnequipped != null)
         {
             ItemUnequipped(this, new InventoryEventArgs(items[equippedItemIndex]));
@@ -79,7 +76,7 @@ public class Inventory : MonoBehaviour
         {
             ItemDropped(this, new InventoryEventArgs(items[equippedItemIndex]));
         }
-        items.RemoveAt(equippedItemIndex);
+        items.Remove(equippedItemIndex);
         equippedItemIndex = -1;
     }
 
