@@ -1,14 +1,15 @@
 ﻿
 using UnityEngine;
 
-public class AssaultRifle : Gun
+public class Pistol : Gun
 {
     private Sprite _image;
 
-    public override string Name {
+    public override string Name
+    {
         get
         {
-            return "Assault Rifle";
+            return "Pistol";
         }
     }
 
@@ -20,10 +21,11 @@ public class AssaultRifle : Gun
         }
     }
 
-    protected override void OnAwake() {
+    protected override void OnAwake()
+    {
         base.fireRate = 0.2f;
-        base.autoFire = true;
-        _image = Resources.Load<Sprite>("Sprites/Assault_Rifle");
+        base.autoFire = false;
+        _image = Resources.Load<Sprite>("Sprites/Pistol");
     }
 
     protected override void OnStart() { }
@@ -34,6 +36,6 @@ public class AssaultRifle : Gun
 
     protected override void OnFireGun()
     {
-        SoundManager.Instance.Play(MixerGroup.Sound, "Sounds/assault_rifle_shot", 0.5f);
+        SoundManager.Instance.Play(MixerGroup.Sound, "Sounds/pistol_shot", 0.5f);
     }
 }

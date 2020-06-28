@@ -19,6 +19,7 @@ public class Player : MonoBehaviour
 
     private void Inventory_ItemEquipped(object sender, InventoryEventArgs args)
     {
+        Debug.Log("ITEM EQUIPPED");
         IInventoryItem item = args.Item;
         GameObject goItem = (item as MonoBehaviour).gameObject;
         goItem.SetActive(true);
@@ -34,6 +35,7 @@ public class Player : MonoBehaviour
     {
         IInventoryItem item = args.Item;
         GameObject goItem = (item as MonoBehaviour).gameObject;
+        Debug.Log("ITEM UNEQUIPPED");
         goItem.SetActive(false);
         animator.SetBool("ItemEquipped", false);
     }

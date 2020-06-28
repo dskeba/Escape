@@ -15,6 +15,7 @@ public abstract class Gun : InventoryItemBase
     float tracerMaxDistance = 10000f;
 
     protected float fireRate = 1f;
+    protected bool autoFire = false;
     protected abstract void OnAwake();
     protected abstract void OnStart();
     protected abstract void OnFixedUpdate();
@@ -45,7 +46,8 @@ public abstract class Gun : InventoryItemBase
         fireRateTimer += Time.deltaTime;
         if (fireRateTimer >= fireRate)
         {
-            if (Input.GetButton("Fire1"))
+            if (Input.GetButton("Fire1") && autoFire ||
+                Input.GetButtonDown("Fire1") && !autoFire)
             {
                 fireRateTimer = 0f;
                 FireGun();
