@@ -1,7 +1,7 @@
 ﻿
 using UnityEngine;
 
-public class AssaultRifle : Gun
+public class AssaultRifle : InventoryItemGun
 {
     private Sprite _image;
 
@@ -20,17 +20,17 @@ public class AssaultRifle : Gun
         }
     }
 
-    protected override void OnAwake() {
-        base.fireRate = 0.2f;
-        base.autoFire = true;
+    protected override void OnGunAwake() {
+        base.useRate = 0.2f;
+        base.autoUse = true;
         _image = Resources.Load<Sprite>("Sprites/Assault_Rifle");
     }
 
-    protected override void OnStart() { }
+    protected override void OnGunStart() { }
 
-    protected override void OnFixedUpdate() { }
+    protected override void OnGunFixedUpdate() { }
 
-    protected override void OnUpdate() { }
+    protected override void OnGunUpdate() { }
 
     protected override void OnFireGun()
     {

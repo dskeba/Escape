@@ -1,7 +1,7 @@
 ﻿
 using UnityEngine;
 
-public class Pistol : Gun
+public class Pistol : InventoryItemGun
 {
     private Sprite _image;
 
@@ -21,18 +21,18 @@ public class Pistol : Gun
         }
     }
 
-    protected override void OnAwake()
+    protected override void OnGunAwake()
     {
-        base.fireRate = 0.2f;
-        base.autoFire = false;
+        base.useRate = 0.2f;
+        base.autoUse = false;
         _image = Resources.Load<Sprite>("Sprites/Pistol");
     }
 
-    protected override void OnStart() { }
+    protected override void OnGunStart() { }
 
-    protected override void OnFixedUpdate() { }
+    protected override void OnGunFixedUpdate() { }
 
-    protected override void OnUpdate() { }
+    protected override void OnGunUpdate() { }
 
     protected override void OnFireGun()
     {

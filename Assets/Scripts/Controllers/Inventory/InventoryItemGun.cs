@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public abstract class Gun : InventoryItemBase
+public abstract class InventoryItemGun : InventoryItemUsable
 {
-    float fireRateTimer = 0f;
     GameObject tracerObject;
     LineRenderer tracerLineRenderer;
     GameObject muzzleFlashObject;
@@ -14,57 +13,40 @@ public abstract class Gun : InventoryItemBase
     Vector3 tracerEndPoint;
     float tracerMaxDistance = 10000f;
 
-    protected float fireRate = 1f;
-    protected bool autoFire = false;
-    protected abstract void OnAwake();
-    protected abstract void OnStart();
-    protected abstract void OnFixedUpdate();
-    protected abstract void OnUpdate();
+    protected abstract void OnGunAwake();
+    protected abstract void OnGunStart();
+    protected abstract void OnGunFixedUpdate();
+    protected abstract void OnGunUpdate();
     protected abstract void OnFireGun();
 
     public Transform firePoint;
 
-    void Awake()
+    protected override void OnUsableAwake()
     {
-        OnAwake();
+        base.ItemType = InventoryItemType.Gun;
+        OnGunAwake();
     }
 
-    void Start()
+    protected override void OnUsableStart()
     {
         tracerObject = GameObject.FindGameObjectWithTag("Tracer");
         tracerLineRenderer = tracerObject.GetComponent<LineRenderer>();
         muzzleFlashObject = GameObject.FindGameObjectWithTag("MuzzleFlash");
         muzzleFlashLight = muzzleFlashObject.GetComponent<Light>();
-
-        OnStart();
+        OnGunStart();
     }
 
-    void Update()
+    protected override void OnUsableUpdate()
     {
-        if (!base.IsEquipped) { return; }
-
-        fireRateTimer += Time.deltaTime;
-        if (fireRateTimer >= fireRate)
-        {
-            if (Input.GetButton("Fire1") && autoFire ||
-                Input.GetButtonDown("Fire1") && !autoFire)
-            {
-                fireRateTimer = 0f;
-                FireGun();
-            }
-        }
-
-        OnUpdate();
+        OnGunUpdate();
     }
 
-    void FixedUpdate()
+    protected override void OnUsableFixedUpdate()
     {
-        if (!base.IsEquipped) { return; }
-
-        OnFixedUpdate();
+        OnGunFixedUpdate();
     }
 
-    public void FireGun()
+    protected override void OnUse()
     {
         Ray ray = Camera.main.ViewportPointToRay(Vector3.one * 0.5f);
         tracerStartPoint = firePoint.position;

@@ -29,7 +29,7 @@ public class Player : MonoBehaviour
         var rotation = new Vector3(-6.352f, 82.234f, -88.08f);
         goItem.transform.localPosition = position;
         goItem.transform.localEulerAngles = rotation;
-        animator.SetBool("ItemEquipped", true);
+        SetItemEquipped(item, true);
     }
 
     private void Inventory_ItemUnequipped(object sender, InventoryEventArgs args)
@@ -37,7 +37,7 @@ public class Player : MonoBehaviour
         IInventoryItem item = args.Item;
         GameObject goItem = (item as MonoBehaviour).gameObject;
         goItem.SetActive(false);
-        animator.SetBool("ItemEquipped", false);
+        SetItemEquipped(item, false);
     }
 
     private void Inventory_ItemDropped(object sender, InventoryEventArgs args)
@@ -46,7 +46,19 @@ public class Player : MonoBehaviour
         GameObject goItem = (item as MonoBehaviour).gameObject;
         goItem.transform.parent = transform.parent;
         goItem.transform.position = transform.position + new Vector3(2f, 0f, 2f);
-        animator.SetBool("ItemEquipped", false);
+        SetItemEquipped(item, false);
+    }
+
+    private void SetItemEquipped(IInventoryItem item, bool equipped)
+    {
+        if (item.ItemType == InventoryItemType.Gun)
+        {
+            animator.SetBool("GunEquipped", equipped);
+        }
+        else if (item.ItemType == InventoryItemType.Consumable)
+        {
+            animator.SetBool("ConsumableEquipped", equipped);
+        }
     }
 
     private void Update()
