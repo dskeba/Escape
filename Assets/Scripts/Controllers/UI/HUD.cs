@@ -5,11 +5,16 @@ using UnityEngine.UI;
 public class HUD : MonoBehaviour
 {
     public Inventory Inventory;
+    public GameObject MessagePanel;
+
+    private Text textComponent;
 
     void Start()
     {
         Inventory.ItemAdded += Inventory_ItemAdded;
         Inventory.ItemDropped += Inventory_ItemDropped;
+
+        textComponent = MessagePanel.transform.Find("Text").GetComponent<Text>();
     }
 
     private void Inventory_ItemAdded(object sender, InventoryEventArgs args)
@@ -38,5 +43,16 @@ public class HUD : MonoBehaviour
                 image.enabled = false;
             }
         }
+    }
+
+    public void ShowMessagePanel(string text)
+    {
+        textComponent.text = text;
+        MessagePanel.SetActive(true);
+    }
+
+    public void HideMessagePanel()
+    {
+        MessagePanel.SetActive(false);
     }
 }

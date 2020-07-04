@@ -25,7 +25,7 @@ public class Medkit : InventoryItemConsumable
     {
         base.useRate = 1f;
         base.autoUse = false;
-        _image = Resources.Load<Sprite>("Sprites/Assault_Rifle");
+        _image = Resources.Load<Sprite>("Sprites/Medkit");
     }
 
     protected override void OnConsumableFixedUpdate()

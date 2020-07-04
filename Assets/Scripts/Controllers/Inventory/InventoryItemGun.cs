@@ -52,14 +52,17 @@ public abstract class InventoryItemGun : InventoryItemUsable
         tracerStartPoint = firePoint.position;
         tracerEndPoint = ray.direction * tracerMaxDistance;
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, tracerMaxDistance))
+        int layerMask = 1 << 10;
+        if (Physics.Raycast(ray, out hit, tracerMaxDistance, layerMask))
         {
             if (hit.collider.gameObject.layer != LayerMask.NameToLayer("Ground"))
             {
-                //hit.collider.transform.localScale = Vector3.zero;
                 var parentTransform = hit.collider.transform.root;
                 var colliderHealth = parentTransform.GetComponent<ZombieHealth>();
-                colliderHealth.TakeDamage(25, hit.point);
+                if (colliderHealth != null)
+                {
+                    colliderHealth.TakeDamage(25, hit.point);
+                }
             }
             tracerEndPoint = hit.point;
         }

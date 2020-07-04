@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Security.Cryptography;
 
 public abstract class InventoryItemBase : MonoBehaviour, IInventoryItem
 {
@@ -43,14 +44,19 @@ public abstract class InventoryItemBase : MonoBehaviour, IInventoryItem
         {
             collider.enabled = true;
         }
+        Rigidbody rb = gameObject.AddComponent<Rigidbody>();
+        rb.AddForce(transform.forward * 5.0f, ForceMode.Impulse);
     }
 
     public void OnPickup()
     {
+        Debug.Log("piuckup");
         gameObject.SetActive(false);
         Collider collider = GetComponent<Collider>();
         if (collider) {
             collider.enabled = false;
         }
+        Destroy(gameObject.GetComponent<Rigidbody>());
+        
     }
 }

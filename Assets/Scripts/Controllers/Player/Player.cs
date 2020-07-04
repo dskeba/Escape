@@ -1,20 +1,25 @@
 ﻿
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public Inventory inventory;
+    public Inventory Inventory;
+    public HUD HUD;
 
     private GameObject palmObject;
     private Animator animator;
+    private List<IInventoryItem> pickupItems;
 
     private void Start()
     {
+        pickupItems = new List<IInventoryItem>();
+
         animator = GetComponent<Animator>();
         palmObject = GameObject.FindGameObjectWithTag("PlayerPalm");
-        inventory.ItemEquipped += Inventory_ItemEquipped;
-        inventory.ItemUnequipped += Inventory_ItemUnequipped;
-        inventory.ItemDropped += Inventory_ItemDropped;
+        Inventory.ItemEquipped += Inventory_ItemEquipped;
+        Inventory.ItemUnequipped += Inventory_ItemUnequipped;
+        Inventory.ItemDropped += Inventory_ItemDropped;
 
         SoundManager.Instance.Play(MixerGroup.Music, "Sounds/creeprs", 0.5f);
     }
@@ -45,7 +50,6 @@ public class Player : MonoBehaviour
         IInventoryItem item = args.Item;
         GameObject goItem = (item as MonoBehaviour).gameObject;
         goItem.transform.parent = transform.parent;
-        goItem.transform.position = transform.position + new Vector3(2f, 0f, 2f);
         SetItemEquipped(item, false);
     }
 
@@ -67,14 +71,50 @@ public class Player : MonoBehaviour
         {
             Application.Quit();
         }
+
+        if (pickupItems.Count > 0 && Input.GetKeyDown("f"))
+        {
+            Inventory.AddItem(pickupItems[0]);
+            pickupItems.RemoveAt(0);
+            if (pickupItems.Count == 0)
+            {
+                HUD.HideMessagePanel();
+            } 
+            else
+            {
+                HUD.ShowMessagePanel("Press F To Pickup " + pickupItems[0].Name);
+            }
+        }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        IInventoryItem item = collision.collider.GetComponent<IInventoryItem>();
+        IInventoryItem item = other.GetComponent<IInventoryItem>();
         if (item != null)
         {
-            inventory.AddItem(item);
+            if (pickupItems.Count == 0)
+            {
+                HUD.ShowMessagePanel("Press F To Pickup " + item.Name);
+            }
+            pickupItems.Add(item);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        IInventoryItem item = other.GetComponent<IInventoryItem>();
+        if (item != null)
+        {
+            Debug.Log("exit " + item.Name);
+            pickupItems.Remove(item);
+            if (pickupItems.Count == 0)
+            {
+                HUD.HideMessagePanel();
+            }
+            else
+            {
+                HUD.ShowMessagePanel("Press F To Pickup " + pickupItems[0].Name);
+            }
         }
     }
 }
