@@ -9,6 +9,7 @@ public class PlayerAim : MonoBehaviour
     private GameObject _playerHipsObject;
     [SerializeField]
     private GameObject _playerTorsoObject;
+    [SerializeField]
     private Animator _animator;
     private Vector3 _input;
 
@@ -29,16 +30,6 @@ public class PlayerAim : MonoBehaviour
 
         float yawCamera = _mainCamera.transform.rotation.eulerAngles.y;
 
-        float pitchCamera = _mainCamera.transform.rotation.eulerAngles.x;
-        if (pitchCamera > 30 && pitchCamera < 90)
-        {
-            pitchCamera = 30;
-        }
-        else if (pitchCamera > 270 && pitchCamera < 330)
-        {
-            pitchCamera = 330;
-        }
-
         Vector3 direction = new Vector3(_input.x, 0f, _input.y).normalized;
         _targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
         if (_targetAngle == 180)
@@ -56,6 +47,20 @@ public class PlayerAim : MonoBehaviour
             _targetAngle = -offset;
         }
         transform.eulerAngles = new Vector3(0, yawCamera + _targetAngle, 0);
-        _playerHipsObject.transform.localEulerAngles = new Vector3(0f, -_targetAngle, 0f);
+        _playerHipsObject.transform.localEulerAngles = new Vector3(0f, -_targetAngle/2, 0f);
+    }
+
+    private void LateUpdate()
+    {
+        float pitchCamera = _mainCamera.transform.rotation.eulerAngles.x;
+        if (pitchCamera > 45 && pitchCamera < 90)
+        {
+            pitchCamera = 45;
+        }
+        else if (pitchCamera > 270 && pitchCamera < 315)
+        {
+            pitchCamera = 315;
+        }
+        _playerTorsoObject.transform.localEulerAngles = new Vector3(pitchCamera, -_targetAngle/2, 0f);
     }
 }
