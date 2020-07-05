@@ -1,15 +1,16 @@
 ﻿using UnityEngine;
 
-public abstract class InventoryItemConsumable : InventoryItemUsable
+public abstract class Consumable : Usable
 {
     protected abstract void OnConsumableAwake();
     protected abstract void OnConsumableStart();
     protected abstract void OnConsumableFixedUpdate();
     protected abstract void OnConsumableUpdate();
 
+    public Consumable() { }
+
     protected override void OnUsableAwake()
     {
-        base.ItemType = InventoryItemType.Consumable;
         OnConsumableAwake();
     }
 

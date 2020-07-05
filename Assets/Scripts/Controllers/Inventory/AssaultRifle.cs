@@ -1,29 +1,17 @@
 ﻿
 using UnityEngine;
 
-public class AssaultRifle : InventoryItemGun
+public class AssaultRifle : Gun
 {
-    private Sprite _image;
-
-    public override string Name {
-        get
-        {
-            return "Assault Rifle";
-        }
-    }
-
-    public override Sprite Image
+    public AssaultRifle()
     {
-        get
-        {
-            return _image;
-        }
+        base.Name = "Assault Rifle";
+        base.UseRate = 0.2f;
+        base.IsAuto = true;
     }
 
     protected override void OnGunAwake() {
-        base.useRate = 0.2f;
-        base.autoUse = true;
-        _image = Resources.Load<Sprite>("Sprites/Assault_Rifle");
+        base.Image = Resources.Load<Sprite>("Sprites/Assault_Rifle");
     }
 
     protected override void OnGunStart() { }

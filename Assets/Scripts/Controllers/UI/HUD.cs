@@ -4,17 +4,18 @@ using UnityEngine.UI;
 
 public class HUD : MonoBehaviour
 {
-    public Inventory Inventory;
-    public GameObject MessagePanel;
-
+    [SerializeField]
+    private Inventory _inventory;
+    [SerializeField]
+    private GameObject _messagePanel;
     private Text textComponent;
 
-    void Start()
+    private void Start()
     {
-        Inventory.ItemAdded += Inventory_ItemAdded;
-        Inventory.ItemDropped += Inventory_ItemDropped;
+        _inventory.ItemAdded += Inventory_ItemAdded;
+        _inventory.ItemDropped += Inventory_ItemDropped;
 
-        textComponent = MessagePanel.transform.Find("Text").GetComponent<Text>();
+        textComponent = _messagePanel.transform.Find("Text").GetComponent<Text>();
     }
 
     private void Inventory_ItemAdded(object sender, InventoryEventArgs args)
@@ -48,11 +49,11 @@ public class HUD : MonoBehaviour
     public void ShowMessagePanel(string text)
     {
         textComponent.text = text;
-        MessagePanel.SetActive(true);
+        _messagePanel.SetActive(true);
     }
 
     public void HideMessagePanel()
     {
-        MessagePanel.SetActive(false);
+        _messagePanel.SetActive(false);
     }
 }

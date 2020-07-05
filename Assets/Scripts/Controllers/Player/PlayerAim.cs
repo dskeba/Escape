@@ -3,49 +3,59 @@ using UnityEngine;
 
 public class PlayerAim : MonoBehaviour
 {
-    private Camera mainCamera;
-    private float targetAngle;
-    private GameObject playerHipsObject;
-    private Animator animator;
-    private Rigidbody rb;
-    private Vector3 input;
+    private Camera _mainCamera;
+    private float _targetAngle;
+    [SerializeField]
+    private GameObject _playerHipsObject;
+    [SerializeField]
+    private GameObject _playerTorsoObject;
+    private Animator _animator;
+    private Vector3 _input;
 
     private void Start()
     {
-        mainCamera = Camera.main;
+        _mainCamera = Camera.main;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-        animator = GetComponent<Animator>();
-        rb = GetComponent<Rigidbody>();
-        playerHipsObject = GameObject.FindGameObjectWithTag("PlayerHips");
+        _animator = GetComponent<Animator>();
     }
 
     private void Update()
     {
-        input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-        input = Vector2.ClampMagnitude(input, 1);
-        animator.SetFloat("MoveX", input.x);
-        animator.SetFloat("MoveY", input.y);
+        _input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        _input = Vector2.ClampMagnitude(_input, 1);
+        _animator.SetFloat("MoveX", _input.x);
+        _animator.SetFloat("MoveY", _input.y);
 
-        float yawCamera = mainCamera.transform.rotation.eulerAngles.y;
-        Vector3 direction = new Vector3(input.x, 0f, input.y).normalized;
-        targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
-        if (targetAngle == 180)
+        float yawCamera = _mainCamera.transform.rotation.eulerAngles.y;
+
+        float pitchCamera = _mainCamera.transform.rotation.eulerAngles.x;
+        if (pitchCamera > 30 && pitchCamera < 90)
         {
-            targetAngle = 0;
+            pitchCamera = 30;
         }
-        else if (targetAngle > 90)
+        else if (pitchCamera > 270 && pitchCamera < 330)
         {
-            var offset = targetAngle - 90;
-            targetAngle = -offset;
+            pitchCamera = 330;
+        }
+
+        Vector3 direction = new Vector3(_input.x, 0f, _input.y).normalized;
+        _targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
+        if (_targetAngle == 180)
+        {
+            _targetAngle = 0;
+        }
+        else if (_targetAngle > 90)
+        {
+            var offset = _targetAngle - 90;
+            _targetAngle = -offset;
         } 
-        else if (targetAngle < -90)
+        else if (_targetAngle < -90)
         {
-            var offset = targetAngle + 90;
-            targetAngle = -offset;
+            var offset = _targetAngle + 90;
+            _targetAngle = -offset;
         }
-        transform.eulerAngles = new Vector3(0, yawCamera + targetAngle, 0);
-        playerHipsObject.transform.localEulerAngles = new Vector3(0f, -targetAngle, 0f);
-
+        transform.eulerAngles = new Vector3(0, yawCamera + _targetAngle, 0);
+        _playerHipsObject.transform.localEulerAngles = new Vector3(pitchCamera, -_targetAngle, 0f);
     }
 }

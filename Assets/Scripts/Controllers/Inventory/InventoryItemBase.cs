@@ -1,18 +1,17 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System.Security.Cryptography;
 
 public abstract class InventoryItemBase : MonoBehaviour, IInventoryItem
 {
-    public virtual string Name { get; }
-    public virtual Sprite Image { get; }
+    public string Name { get; set; }
+    public Sprite Image { get; set; }
     public bool IsEquipped { get; set; }
-    public InventoryItemType ItemType { get; set; }
 
     protected abstract void OnBaseAwake();
     protected abstract void OnBaseStart();
     protected abstract void OnBaseFixedUpdate();
     protected abstract void OnBaseUpdate();
+
+    public InventoryItemBase() { }
 
     private void Awake()
     {
@@ -50,7 +49,6 @@ public abstract class InventoryItemBase : MonoBehaviour, IInventoryItem
 
     public void OnPickup()
     {
-        Debug.Log("piuckup");
         gameObject.SetActive(false);
         Collider collider = GetComponent<Collider>();
         if (collider) {

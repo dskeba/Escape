@@ -4,13 +4,15 @@ using UnityEngine.UI;
 
 public class FPSCounter : MonoBehaviour
 {
-    private Text fpsCounterText;
+    private Text _fpsCounterText;
+
     private void Start()
     {
-        fpsCounterText = GetComponent<Text>();
+        _fpsCounterText = GetComponent<Text>();
     }
-    void Update()
+
+    private void Update()
     {
-        fpsCounterText.text = "" + (int)(1f / Time.unscaledDeltaTime);
+        _fpsCounterText.text = "" + (int)(1f / Time.unscaledDeltaTime);
     }
 }

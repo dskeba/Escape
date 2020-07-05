@@ -3,10 +3,9 @@ using System;
 
 public interface IInventoryItem
 {
-    string Name { get; }
-    Sprite Image { get; }
+    string Name { get; set; }
+    Sprite Image { get; set; }
     bool IsEquipped { get; set; }
-    InventoryItemType ItemType { get; set; }
     void OnPickup();
     void OnDrop();
 }
@@ -19,11 +18,4 @@ public class InventoryEventArgs : EventArgs
     {
         Item = item;
     }
-}
-
-public enum InventoryItemType
-{
-    Gun,
-    Consumable,
-    Other
 }

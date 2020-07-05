@@ -4,23 +4,22 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public Inventory Inventory;
-    public HUD HUD;
-
-    private GameObject palmObject;
-    private Animator animator;
-    private List<IInventoryItem> pickupItems;
+    [SerializeField]
+    private Inventory _inventory;
+    [SerializeField]
+    private HUD _hud;
+    private GameObject _palmObject;
+    private Animator _animator;
+    private List<IInventoryItem> _pickupItems;
 
     private void Start()
     {
-        pickupItems = new List<IInventoryItem>();
-
-        animator = GetComponent<Animator>();
-        palmObject = GameObject.FindGameObjectWithTag("PlayerPalm");
-        Inventory.ItemEquipped += Inventory_ItemEquipped;
-        Inventory.ItemUnequipped += Inventory_ItemUnequipped;
-        Inventory.ItemDropped += Inventory_ItemDropped;
-
+        _pickupItems = new List<IInventoryItem>();
+        _animator = GetComponent<Animator>();
+        _palmObject = GameObject.FindGameObjectWithTag("PlayerPalm");
+        _inventory.ItemEquipped += Inventory_ItemEquipped;
+        _inventory.ItemUnequipped += Inventory_ItemUnequipped;
+        _inventory.ItemDropped += Inventory_ItemDropped;
         SoundManager.Instance.Play(MixerGroup.Music, "Sounds/creeprs", 0.5f);
     }
 
@@ -29,7 +28,7 @@ public class Player : MonoBehaviour
         IInventoryItem item = args.Item;
         GameObject goItem = (item as MonoBehaviour).gameObject;
         goItem.SetActive(true);
-        goItem.transform.parent = palmObject.transform;
+        goItem.transform.parent = _palmObject.transform;
         var position = new Vector3(0.00045f, 0.00315f, -0.0007f);
         var rotation = new Vector3(-6.352f, 82.234f, -88.08f);
         goItem.transform.localPosition = position;
@@ -55,13 +54,13 @@ public class Player : MonoBehaviour
 
     private void SetItemEquipped(IInventoryItem item, bool equipped)
     {
-        if (item.ItemType == InventoryItemType.Gun)
+        if (item.GetType().IsSubclassOf(typeof(Gun)))
         {
-            animator.SetBool("GunEquipped", equipped);
+            _animator.SetBool("GunEquipped", equipped);
         }
-        else if (item.ItemType == InventoryItemType.Consumable)
+        else if (item.GetType().IsSubclassOf(typeof(Consumable)))
         {
-            animator.SetBool("ConsumableEquipped", equipped);
+            _animator.SetBool("ConsumableEquipped", equipped);
         }
     }
 
@@ -72,17 +71,17 @@ public class Player : MonoBehaviour
             Application.Quit();
         }
 
-        if (pickupItems.Count > 0 && Input.GetKeyDown("f"))
+        if (_pickupItems.Count > 0 && Input.GetKeyDown("f"))
         {
-            Inventory.AddItem(pickupItems[0]);
-            pickupItems.RemoveAt(0);
-            if (pickupItems.Count == 0)
+            _inventory.AddItem(_pickupItems[0]);
+            _pickupItems.RemoveAt(0);
+            if (_pickupItems.Count == 0)
             {
-                HUD.HideMessagePanel();
+                _hud.HideMessagePanel();
             } 
             else
             {
-                HUD.ShowMessagePanel("Press F To Pickup " + pickupItems[0].Name);
+                _hud.ShowMessagePanel("Press F To Pickup " + _pickupItems[0].Name);
             }
         }
     }
@@ -92,11 +91,11 @@ public class Player : MonoBehaviour
         IInventoryItem item = other.GetComponent<IInventoryItem>();
         if (item != null)
         {
-            if (pickupItems.Count == 0)
+            if (_pickupItems.Count == 0)
             {
-                HUD.ShowMessagePanel("Press F To Pickup " + item.Name);
+                _hud.ShowMessagePanel("Press F To Pickup " + item.Name);
             }
-            pickupItems.Add(item);
+            _pickupItems.Add(item);
         }
     }
 
@@ -106,14 +105,14 @@ public class Player : MonoBehaviour
         if (item != null)
         {
             Debug.Log("exit " + item.Name);
-            pickupItems.Remove(item);
-            if (pickupItems.Count == 0)
+            _pickupItems.Remove(item);
+            if (_pickupItems.Count == 0)
             {
-                HUD.HideMessagePanel();
+                _hud.HideMessagePanel();
             }
             else
             {
-                HUD.ShowMessagePanel("Press F To Pickup " + pickupItems[0].Name);
+                _hud.ShowMessagePanel("Press F To Pickup " + _pickupItems[0].Name);
             }
         }
     }

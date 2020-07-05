@@ -1,17 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public abstract class InventoryItemGun : InventoryItemUsable
+public abstract class Gun : Usable
 {
-    GameObject tracerObject;
-    LineRenderer tracerLineRenderer;
-    GameObject muzzleFlashObject;
-    Light muzzleFlashLight;
-    float muzzleFlashSeconds = 0.015f;
-    float tracerSeconds = 0.015f;
-    Vector3 tracerStartPoint;
-    Vector3 tracerEndPoint;
-    float tracerMaxDistance = 10000f;
+    public Transform firePoint;
 
     protected abstract void OnGunAwake();
     protected abstract void OnGunStart();
@@ -19,20 +11,30 @@ public abstract class InventoryItemGun : InventoryItemUsable
     protected abstract void OnGunUpdate();
     protected abstract void OnFireGun();
 
-    public Transform firePoint;
+    private GameObject _tracerObject;
+    private LineRenderer _tracerLineRenderer;
+    private GameObject _muzzleFlashObject;
+    private Light _muzzleFlashLight;
+    private float _muzzleFlashSeconds = 0.015f;
+    private float _tracerSeconds = 0.015f;
+    private Vector3 _tracerStartPoint;
+    private Vector3 _tracerEndPoint;
+    private float _tracerMaxDistance = 10000f;
+
+    public Gun() { }
 
     protected override void OnUsableAwake()
     {
-        base.ItemType = InventoryItemType.Gun;
         OnGunAwake();
     }
 
     protected override void OnUsableStart()
     {
-        tracerObject = GameObject.FindGameObjectWithTag("Tracer");
-        tracerLineRenderer = tracerObject.GetComponent<LineRenderer>();
-        muzzleFlashObject = GameObject.FindGameObjectWithTag("MuzzleFlash");
-        muzzleFlashLight = muzzleFlashObject.GetComponent<Light>();
+        _tracerObject = GameObject.FindGameObjectWithTag("Tracer");
+        _tracerLineRenderer = _tracerObject.GetComponent<LineRenderer>();
+        _muzzleFlashObject = GameObject.FindGameObjectWithTag("MuzzleFlash");
+        _muzzleFlashLight = _muzzleFlashObject.GetComponent<Light>();
+
         OnGunStart();
     }
 
@@ -49,11 +51,12 @@ public abstract class InventoryItemGun : InventoryItemUsable
     protected override void OnUse()
     {
         Ray ray = Camera.main.ViewportPointToRay(Vector3.one * 0.5f);
-        tracerStartPoint = firePoint.position;
-        tracerEndPoint = ray.direction * tracerMaxDistance;
+        _tracerStartPoint = firePoint.position;
+        _tracerEndPoint = ray.direction * _tracerMaxDistance;
         RaycastHit hit;
         int layerMask = 1 << 10;
-        if (Physics.Raycast(ray, out hit, tracerMaxDistance, layerMask))
+
+        if (Physics.Raycast(ray, out hit, _tracerMaxDistance, layerMask))
         {
             if (hit.collider.gameObject.layer != LayerMask.NameToLayer("Ground"))
             {
@@ -64,27 +67,32 @@ public abstract class InventoryItemGun : InventoryItemUsable
                     colliderHealth.TakeDamage(25, hit.point);
                 }
             }
-            tracerEndPoint = hit.point;
+            _tracerEndPoint = hit.point;
         }
-        StartCoroutine(DrawTracerForSeconds(tracerSeconds));
-        StartCoroutine(DrawMuzzleFlashForSeconds(muzzleFlashSeconds));
+
+        StartCoroutine(DrawTracerForSeconds(_tracerSeconds));
+        StartCoroutine(DrawMuzzleFlashForSeconds(_muzzleFlashSeconds));
 
         OnFireGun();
     }
 
     private IEnumerator DrawMuzzleFlashForSeconds(float seconds)
     {
-        muzzleFlashLight.enabled = true;
+        _muzzleFlashLight.enabled = true;
+
         yield return new WaitForSeconds(seconds);
-        muzzleFlashLight.enabled = false;
+
+        _muzzleFlashLight.enabled = false;
     }
 
     private IEnumerator DrawTracerForSeconds(float seconds)
     {
-        tracerLineRenderer.SetPosition(0, tracerStartPoint);
-        tracerLineRenderer.SetPosition(1, tracerEndPoint);
-        tracerLineRenderer.enabled = true;
+        _tracerLineRenderer.SetPosition(0, _tracerStartPoint);
+        _tracerLineRenderer.SetPosition(1, _tracerEndPoint);
+        _tracerLineRenderer.enabled = true;
+
         yield return new WaitForSeconds(seconds);
-        tracerLineRenderer.enabled = false;
+
+        _tracerLineRenderer.enabled = false;
     }
 }

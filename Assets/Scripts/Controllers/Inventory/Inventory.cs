@@ -1,19 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System;
-using System.Linq;
 
 public class Inventory : MonoBehaviour
 {
-    private const int MAX_ITEMS = 9;
-
-    private Dictionary<int, IInventoryItem> items;
-    private int equippedItemIndex = -1;
-
     public event EventHandler<InventoryEventArgs> ItemAdded;
     public event EventHandler<InventoryEventArgs> ItemEquipped;
     public event EventHandler<InventoryEventArgs> ItemUnequipped;
     public event EventHandler<InventoryEventArgs> ItemDropped;
+
+    private const int MAX_ITEMS = 9;
+    private Dictionary<int, IInventoryItem> items;
+    private int equippedItemIndex = -1;
 
     public Inventory()
     {
