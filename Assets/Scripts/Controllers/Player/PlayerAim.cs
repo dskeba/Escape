@@ -56,6 +56,6 @@ public class PlayerAim : MonoBehaviour
             _targetAngle = -offset;
         }
         transform.eulerAngles = new Vector3(0, yawCamera + _targetAngle, 0);
-        _playerHipsObject.transform.localEulerAngles = new Vector3(pitchCamera, -_targetAngle, 0f);
+        _playerHipsObject.transform.localEulerAngles = new Vector3(0f, -_targetAngle, 0f);
     }
 }
