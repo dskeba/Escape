@@ -3,6 +3,7 @@ using System;
 
 public interface IInventoryItem
 {
+    int Index { get; set; }
     string Name { get; set; }
     Sprite Image { get; set; }
     bool IsEquipped { get; set; }
@@ -14,7 +15,7 @@ public class InventoryEventArgs : EventArgs
 {
     public IInventoryItem Item;
 
-    public InventoryEventArgs(IInventoryItem item)
+    public InventoryEventArgs(IInventoryItem item, int equippedItemIndex)
     {
         Item = item;
     }

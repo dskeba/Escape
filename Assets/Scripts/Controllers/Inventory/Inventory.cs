@@ -27,10 +27,11 @@ public class Inventory : MonoBehaviour
                 if (!items.ContainsKey(i))
                 {
                     items.Add(i, item);
+                    item.Index = i;
                     item.OnPickup();
                     if (ItemAdded != null)
                     {
-                        ItemAdded(this, new InventoryEventArgs(item));
+                        ItemAdded(this, new InventoryEventArgs(item, equippedItemIndex));
                     }
                     return;
                 }
@@ -51,7 +52,7 @@ public class Inventory : MonoBehaviour
         items[equippedItemIndex].IsEquipped = true;
         if (ItemEquipped != null)
         {
-            ItemEquipped(this, new InventoryEventArgs(items[equippedItemIndex]));
+            ItemEquipped(this, new InventoryEventArgs(items[equippedItemIndex], equippedItemIndex));
         }
     }
 
@@ -60,7 +61,7 @@ public class Inventory : MonoBehaviour
         items[index].IsEquipped = false;
         if (ItemUnequipped != null)
         {
-            ItemUnequipped(this, new InventoryEventArgs(items[equippedItemIndex]));
+            ItemUnequipped(this, new InventoryEventArgs(items[equippedItemIndex], equippedItemIndex));
         }
         equippedItemIndex = -1;
     }
@@ -72,7 +73,7 @@ public class Inventory : MonoBehaviour
         items[equippedItemIndex].OnDrop();
         if (ItemDropped != null)
         {
-            ItemDropped(this, new InventoryEventArgs(items[equippedItemIndex]));
+            ItemDropped(this, new InventoryEventArgs(items[equippedItemIndex], equippedItemIndex));
         }
         items.Remove(equippedItemIndex);
         equippedItemIndex = -1;

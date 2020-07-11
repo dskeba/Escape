@@ -30,8 +30,13 @@ public class PlayerMovement : MonoBehaviour
         _input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         _input = Vector2.ClampMagnitude(_input, 1);
 
-        _jumpTimer += Time.deltaTime;
+        CheckJumping();
+        CheckRunning();
+    }
 
+    private void CheckJumping()
+    {
+        _jumpTimer += Time.deltaTime;
         if (Input.GetButtonDown("Jump") && CanJump())
         {
             _isGrounded = false;
@@ -39,7 +44,10 @@ public class PlayerMovement : MonoBehaviour
             _animator.SetBool("Jumping", true);
             StartCoroutine(DelayJump());
         }
+    }
 
+    private void CheckRunning()
+    {
         Vignette vignette;
         ChromaticAberration chromaticAberration;
         postProcessProfile.TryGetSettings<Vignette>(out vignette);
@@ -50,8 +58,8 @@ public class PlayerMovement : MonoBehaviour
             chromaticAberration.intensity.value = 0.35f;
             _animator.SetBool("Running", true);
             _speed = 11f;
-            
-        } 
+
+        }
         else
         {
             vignette.intensity.value = 0.2f;
@@ -80,6 +88,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        PreventIdleMovement();
+
         var forward = _mainCamera.transform.forward;
         var right = _mainCamera.transform.right;
         forward.y = 0f;
@@ -88,6 +98,14 @@ public class PlayerMovement : MonoBehaviour
         right.Normalize();
         var destination = transform.position + (forward * _input.y + right * _input.x) * Time.deltaTime * _speed;
         _rb.MovePosition(destination);
+    }
+
+    private void PreventIdleMovement()
+    {
+        if (_isGrounded && _input.x == 0 && _input.y == 0)
+        {
+            _rb.velocity = Vector3.zero;
+        }
     }
 
 }

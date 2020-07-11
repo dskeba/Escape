@@ -2,6 +2,7 @@
 
 public abstract class InventoryItemBase : MonoBehaviour, IInventoryItem
 {
+    public int Index { get; set; }
     public string Name { get; set; }
     public Sprite Image { get; set; }
     public bool IsEquipped { get; set; }
