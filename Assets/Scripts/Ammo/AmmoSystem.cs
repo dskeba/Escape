@@ -7,45 +7,43 @@ public class AmmoSystem : MonoBehaviour
     public event EventHandler<AmmoSystemEvent> AmmoAdded;
     public event EventHandler<AmmoSystemEvent> AmmoUsed;
 
-    private const int MAX_PISTOL_AMMO = 120;
-    private const int MAX_ASSAULT_RIFLE_AMMO = 240;
-    private Dictionary<AmmoType, int> ammoQuantity;
+    public Dictionary<AmmoType, int> ammoQuantity;
+    public Dictionary<AmmoType, int> maxQuantity;
 
     public AmmoSystem()
     {
         ammoQuantity = new Dictionary<AmmoType, int>();
+        ammoQuantity.Add(AmmoType.AssaultRifle, 0);
+        ammoQuantity.Add(AmmoType.Pistol, 0);
+
+        maxQuantity = new Dictionary<AmmoType, int>();
+        maxQuantity.Add(AmmoType.AssaultRifle, 240);
+        maxQuantity.Add(AmmoType.Pistol, 120);
     }
 
     public void AddAmmo(IAmmo ammo)
     {
-        if (ammo.Type == AmmoType.Pistol)
+        ammoQuantity[ammo.Type] += ammo.Quantity;
+        ammo.OnPickup();
+        if (ammoQuantity[ammo.Type] > maxQuantity[ammo.Type])
         {
-            ammoQuantity[AmmoType.Pistol] += ammo.Quantity;
-            if (ammoQuantity[AmmoType.Pistol] > MAX_PISTOL_AMMO)
-            {
-                ammoQuantity[AmmoType.Pistol] = MAX_PISTOL_AMMO;
-            }
-            else
-            {
-                AmmoAdded(this, new AmmoSystemEvent(ammo));
-            }
-        } 
-        else if (ammo.Type == AmmoType.AssaultRifle)
+            ammoQuantity[ammo.Type] = maxQuantity[ammo.Type];
+        }
+        else
         {
-            ammoQuantity[AmmoType.AssaultRifle] += ammo.Quantity;
-            if (ammoQuantity[AmmoType.AssaultRifle] > MAX_ASSAULT_RIFLE_AMMO)
+            if (AmmoAdded != null)
             {
-                ammoQuantity[AmmoType.AssaultRifle] = MAX_ASSAULT_RIFLE_AMMO;
-            }
-            else
-            {
-                AmmoAdded(this, new AmmoSystemEvent(ammo));
+                AmmoAdded(this, new AmmoSystemEvent(ammo.Type));
             }
         }
     }
 
-    public void UseAmmo(AmmoType type)
+    public void UseAmmo(AmmoType type, int quantity)
     {
-        
+        ammoQuantity[type] -= quantity;
+        if (AmmoUsed != null)
+        {
+            AmmoUsed(this, new AmmoSystemEvent(type));
+        }
     }
 }

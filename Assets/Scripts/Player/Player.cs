@@ -7,14 +7,16 @@ public class Player : MonoBehaviour
     [SerializeField]
     private Inventory _inventory;
     [SerializeField]
+    private AmmoSystem _ammoSystem;
+    [SerializeField]
     private HUD _hud;
     private GameObject _palmObject;
     private Animator _animator;
-    private List<IInventoryItem> _pickupItems;
+    private List<IPickupObject> _pickupObjects;
 
     private void Start()
     {
-        _pickupItems = new List<IInventoryItem>();
+        _pickupObjects = new List<IPickupObject>();
         _animator = GetComponent<Animator>();
         _palmObject = GameObject.FindGameObjectWithTag("PlayerPalm");
         _inventory.ItemEquipped += Inventory_ItemEquipped;
@@ -54,11 +56,11 @@ public class Player : MonoBehaviour
 
     private void SetItemEquipped(IInventoryItem item, bool equipped)
     {
-        if (item.GetType().IsSubclassOf(typeof(Gun)))
+        if (item is Gun)
         {
             _animator.SetBool("GunEquipped", equipped);
         }
-        else if (item.GetType().IsSubclassOf(typeof(Consumable)))
+        else if (item is Consumable)
         {
             _animator.SetBool("ConsumableEquipped", equipped);
         }
@@ -71,48 +73,56 @@ public class Player : MonoBehaviour
             Application.Quit();
         }
 
-        if (_pickupItems.Count > 0 && Input.GetKeyDown("f"))
+        if (_pickupObjects.Count > 0 && Input.GetKeyDown("f"))
         {
-            _inventory.AddItem(_pickupItems[0]);
-            _pickupItems.RemoveAt(0);
-            if (_pickupItems.Count == 0)
+            if (_pickupObjects[0] is IInventoryItem)
+            {
+                Debug.Log("inventory item");
+                _inventory.AddItem((IInventoryItem)_pickupObjects[0]);
+            }
+            else if (_pickupObjects[0] is IAmmo)
+            {
+                _ammoSystem.AddAmmo((IAmmo)_pickupObjects[0]);
+            }
+            _pickupObjects.RemoveAt(0);
+            if (_pickupObjects.Count == 0)
             {
                 _hud.HideMessagePanel();
             } 
             else
             {
-                _hud.ShowMessagePanel("Press F To Pickup " + _pickupItems[0].Name);
+                _hud.ShowMessagePanel("Press F To Pickup " + _pickupObjects[0].Name);
             }
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        IInventoryItem item = other.GetComponent<IInventoryItem>();
-        if (item != null)
+        IPickupObject pickupObject = other.GetComponent<IPickupObject>();
+        if (pickupObject != null)
         {
-            if (_pickupItems.Count == 0)
+            if (_pickupObjects.Count == 0)
             {
-                _hud.ShowMessagePanel("Press F To Pickup " + item.Name);
+                _hud.ShowMessagePanel("Press F To Pickup " + pickupObject.Name);
             }
-            _pickupItems.Add(item);
+            _pickupObjects.Add(pickupObject);
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        IInventoryItem item = other.GetComponent<IInventoryItem>();
-        if (item != null)
+        IPickupObject pickupObject = other.GetComponent<IPickupObject>();
+        if (pickupObject != null)
         {
-            Debug.Log("exit " + item.Name);
-            _pickupItems.Remove(item);
-            if (_pickupItems.Count == 0)
+            Debug.Log("exit " + pickupObject.Name);
+            _pickupObjects.Remove(pickupObject);
+            if (_pickupObjects.Count == 0)
             {
                 _hud.HideMessagePanel();
             }
             else
             {
-                _hud.ShowMessagePanel("Press F To Pickup " + _pickupItems[0].Name);
+                _hud.ShowMessagePanel("Press F To Pickup " + _pickupObjects[0].Name);
             }
         }
     }

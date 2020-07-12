@@ -25,5 +25,6 @@ public class Pistol : Gun
     protected override void OnFireGun()
     {
         SoundManager.Instance.Play(MixerGroup.Sound, "Sounds/pistol_shot", 0.5f);
+
     }
 }

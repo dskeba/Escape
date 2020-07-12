@@ -10,6 +10,7 @@ public class Inventory : MonoBehaviour
     public event EventHandler<InventoryEvent> ItemDropped;
 
     private const int MAX_ITEMS = 9;
+
     private Dictionary<int, IInventoryItem> items;
     private int equippedItemIndex = -1;
 

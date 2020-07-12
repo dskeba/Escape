@@ -1,13 +1,11 @@
 ﻿using UnityEngine;
 using System;
 
-public interface IInventoryItem
+public interface IInventoryItem : IPickupObject
 {
     int Index { get; set; }
-    string Name { get; set; }
     Sprite Image { get; set; }
     bool IsEquipped { get; set; }
 
-    void OnPickup();
     void OnDrop();
 }

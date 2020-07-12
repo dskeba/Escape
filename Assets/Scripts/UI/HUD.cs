@@ -10,12 +10,19 @@ public class HUD : MonoBehaviour
     [SerializeField]
     private Inventory _inventory;
     [SerializeField]
+    private AmmoSystem _ammoSystem;
+    [SerializeField]
     private Transform _inventoryPanel;
     [SerializeField]
     private GameObject _messagePanel;
     [SerializeField]
+    private GameObject _gunPanel;
+    [SerializeField]
     private GameObject _ammoPanel;
+
     private Text _textComponent;
+    private Text _pistolAmmoText;
+    private Text _assaultRifleAmmoText;
 
     private void Start()
     {
@@ -24,7 +31,12 @@ public class HUD : MonoBehaviour
         _inventory.ItemEquipped += Inventory_ItemEquipped;
         _inventory.ItemUnequipped += Inventory_ItemUnequipped;
 
+        _ammoSystem.AmmoAdded += AmmoSystem_AmmoAdded;
+        _ammoSystem.AmmoUsed += AmmoSystem_AmmoUsed;
+
         _textComponent = _messagePanel.transform.Find("Text").GetComponent<Text>();
+        _pistolAmmoText = _ammoPanel.transform.Find("PistolText").GetComponent<Text>();
+        _assaultRifleAmmoText = _ammoPanel.transform.Find("AssaultRifleText").GetComponent<Text>();
     }
 
     private void Inventory_ItemAdded(object sender, InventoryEvent inventoryEvent)
@@ -48,7 +60,7 @@ public class HUD : MonoBehaviour
         Image image = slot.GetChild(0).GetComponent<Image>();
         image.color = EQUIPPED_COLOR;
 
-        ShowAmmoPanel();
+        ShowGunPanel();
     }
 
     private void Inventory_ItemUnequipped(object sender, InventoryEvent inventoryEvent)
@@ -57,7 +69,29 @@ public class HUD : MonoBehaviour
         Image image = slot.GetChild(0).GetComponent<Image>();
         image.color = UNEQUIPPED_COLOR;
 
-        HideAmmoPanel();
+        HideGunPanel();
+    }
+
+    private void AmmoSystem_AmmoAdded(object sender, AmmoSystemEvent ammoSystemEvent)
+    {
+        UpdateAmmoText(ammoSystemEvent.Type);
+    }
+
+    private void AmmoSystem_AmmoUsed(object sender, AmmoSystemEvent ammoSystemEvent)
+    {
+        UpdateAmmoText(ammoSystemEvent.Type);
+    }
+
+    private void UpdateAmmoText(AmmoType type)
+    {
+        if (type == AmmoType.Pistol)
+        {
+            _pistolAmmoText.text = _ammoSystem.ammoQuantity[AmmoType.Pistol].ToString();
+        }
+        else if (type == AmmoType.AssaultRifle)
+        {
+            _assaultRifleAmmoText.text = _ammoSystem.ammoQuantity[AmmoType.AssaultRifle].ToString();
+        }
     }
 
     public void ShowMessagePanel(string text)
@@ -71,13 +105,13 @@ public class HUD : MonoBehaviour
         _messagePanel.SetActive(false);
     }
 
-    public void ShowAmmoPanel()
+    public void ShowGunPanel()
     {
-        _ammoPanel.SetActive(true);
+        _gunPanel.SetActive(true);
     }
 
-    public void HideAmmoPanel()
+    public void HideGunPanel()
     {
-        _ammoPanel.SetActive(false);
+        _gunPanel.SetActive(false);
     }
 }

@@ -1,11 +1,8 @@
 ﻿
-public interface IAmmo
+public interface IAmmo : IPickupObject
 {
-    string Name { get; set; }
     AmmoType Type { get; set; }
     int Quantity { get; set; }
-
-    void OnPickup();
 }
 
 public enum AmmoType
