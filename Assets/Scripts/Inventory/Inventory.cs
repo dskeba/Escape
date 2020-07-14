@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System;
 
-public class Inventory : MonoBehaviour
+public class Inventory : Singleton<Inventory>
 {
     public event EventHandler<InventoryEvent> ItemAdded;
     public event EventHandler<InventoryEvent> ItemEquipped;

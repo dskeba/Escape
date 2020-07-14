@@ -9,6 +9,8 @@ public class Pistol : Gun
         base.UseRate = 0.2f;
         base.IsAuto = false;
         base.AmmoType = AmmoType.Pistol;
+        base.MagSize = 10;
+        base.AmmoLoaded = 10;
     }
 
     protected override void OnGunAwake()

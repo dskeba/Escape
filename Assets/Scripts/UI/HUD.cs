@@ -8,10 +8,6 @@ public class HUD : MonoBehaviour
     private static Color UNEQUIPPED_COLOR = new Color(1, 1, 1, 0.25f);
 
     [SerializeField]
-    private Inventory _inventory;
-    [SerializeField]
-    private AmmoSystem _ammoSystem;
-    [SerializeField]
     private Transform _inventoryPanel;
     [SerializeField]
     private GameObject _messagePanel;
@@ -23,20 +19,24 @@ public class HUD : MonoBehaviour
     private Text _textComponent;
     private Text _pistolAmmoText;
     private Text _assaultRifleAmmoText;
+    private Text _currentAmmoText;
+    private Text _totalAmmoText;
 
     private void Start()
     {
-        _inventory.ItemAdded += Inventory_ItemAdded;
-        _inventory.ItemDropped += Inventory_ItemDropped;
-        _inventory.ItemEquipped += Inventory_ItemEquipped;
-        _inventory.ItemUnequipped += Inventory_ItemUnequipped;
+        Inventory.Instance.ItemAdded += Inventory_ItemAdded;
+        Inventory.Instance.ItemDropped += Inventory_ItemDropped;
+        Inventory.Instance.ItemEquipped += Inventory_ItemEquipped;
+        Inventory.Instance.ItemUnequipped += Inventory_ItemUnequipped;
 
-        _ammoSystem.AmmoAdded += AmmoSystem_AmmoAdded;
-        _ammoSystem.AmmoUsed += AmmoSystem_AmmoUsed;
+        AmmoSystem.Instance.AmmoAdded += AmmoSystem_AmmoAdded;
+        AmmoSystem.Instance.AmmoUsed += AmmoSystem_AmmoUsed;
 
         _textComponent = _messagePanel.transform.Find("Text").GetComponent<Text>();
         _pistolAmmoText = _ammoPanel.transform.Find("PistolText").GetComponent<Text>();
         _assaultRifleAmmoText = _ammoPanel.transform.Find("AssaultRifleText").GetComponent<Text>();
+        _currentAmmoText = _gunPanel.transform.Find("CurrentAmmo").GetComponent<Text>();
+        _totalAmmoText = _gunPanel.transform.Find("TotalAmmo").GetComponent<Text>();
     }
 
     private void Inventory_ItemAdded(object sender, InventoryEvent inventoryEvent)
@@ -86,11 +86,11 @@ public class HUD : MonoBehaviour
     {
         if (type == AmmoType.Pistol)
         {
-            _pistolAmmoText.text = _ammoSystem.ammoQuantity[AmmoType.Pistol].ToString();
+            _pistolAmmoText.text = AmmoSystem.Instance.GetQuantity(AmmoType.Pistol).ToString();
         }
         else if (type == AmmoType.AssaultRifle)
         {
-            _assaultRifleAmmoText.text = _ammoSystem.ammoQuantity[AmmoType.AssaultRifle].ToString();
+            _assaultRifleAmmoText.text = AmmoSystem.Instance.GetQuantity(AmmoType.AssaultRifle).ToString();
         }
     }
 

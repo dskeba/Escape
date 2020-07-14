@@ -9,6 +9,8 @@ public class AssaultRifle : Gun
         base.UseRate = 0.2f;
         base.IsAuto = true;
         base.AmmoType = AmmoType.AssaultRifle;
+        base.MagSize = 30;
+        base.AmmoLoaded = 30;
     }
 
     protected override void OnGunAwake() {

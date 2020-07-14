@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public abstract class Gun : Usable
 {
@@ -18,6 +19,8 @@ public abstract class Gun : Usable
     public Gun() { }
 
     public AmmoType AmmoType { get; set; }
+    public int MagSize { get; set; }
+    public int AmmoLoaded { get; set; }
 
     protected abstract void OnGunAwake();
     protected abstract void OnGunStart();
@@ -42,6 +45,11 @@ public abstract class Gun : Usable
 
     protected override void OnUsableUpdate()
     {
+        if (Input.GetKeyDown("r"))
+        {
+            ReloadAmmo();
+        }
+
         OnGunUpdate();
     }
 
@@ -52,6 +60,12 @@ public abstract class Gun : Usable
 
     protected override void OnUse()
     {
+        if (!UseAmmo())
+        {
+            SoundManager.Instance.Play(MixerGroup.Sound, "Sounds/empty_fire", 0.25f);
+            return;
+        }
+
         Ray ray = Camera.main.ViewportPointToRay(Vector3.one * 0.5f);
         _tracerStartPoint = firePoint.position;
         _tracerEndPoint = ray.direction * _tracerMaxDistance;
@@ -76,6 +90,38 @@ public abstract class Gun : Usable
         StartCoroutine(DrawMuzzleFlashForSeconds(_muzzleFlashSeconds));
 
         OnFireGun();
+    }
+
+    private bool ReloadAmmo()
+    {
+        int ammoAvailable = AmmoSystem.Instance.GetQuantity(AmmoType);
+        if (ammoAvailable <= 0)
+        {
+            return false;
+        }
+        int ammoNeeded = MagSize - AmmoLoaded;
+        int ammoReloadAmount;
+        if (ammoAvailable < ammoNeeded)
+        {
+            ammoReloadAmount = ammoAvailable;
+        } 
+        else
+        {
+            ammoReloadAmount = ammoNeeded;
+        }
+        AmmoSystem.Instance.RemoveAmmo(AmmoType, ammoReloadAmount);
+        AmmoLoaded += ammoReloadAmount;
+        return true;
+    }
+
+    private Boolean UseAmmo()
+    {
+        if (AmmoLoaded <= 0)
+        {
+            return false;
+        }
+        AmmoLoaded -= 1;
+        return true;
     }
 
     private IEnumerator DrawMuzzleFlashForSeconds(float seconds)

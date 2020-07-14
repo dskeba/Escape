@@ -56,6 +56,6 @@ public abstract class InventoryItemBase : MonoBehaviour, IInventoryItem
             collider.enabled = false;
         }
         Destroy(gameObject.GetComponent<Rigidbody>());
-        
+        SoundManager.Instance.Play(MixerGroup.Sound, "Sounds/pickup", 0.5f);
     }
 }

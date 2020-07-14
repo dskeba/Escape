@@ -5,10 +5,6 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [SerializeField]
-    private Inventory _inventory;
-    [SerializeField]
-    private AmmoSystem _ammoSystem;
-    [SerializeField]
     private HUD _hud;
     private GameObject _palmObject;
     private Animator _animator;
@@ -19,9 +15,9 @@ public class Player : MonoBehaviour
         _pickupObjects = new List<IPickupObject>();
         _animator = GetComponent<Animator>();
         _palmObject = GameObject.FindGameObjectWithTag("PlayerPalm");
-        _inventory.ItemEquipped += Inventory_ItemEquipped;
-        _inventory.ItemUnequipped += Inventory_ItemUnequipped;
-        _inventory.ItemDropped += Inventory_ItemDropped;
+        Inventory.Instance.ItemEquipped += Inventory_ItemEquipped;
+        Inventory.Instance.ItemUnequipped += Inventory_ItemUnequipped;
+        Inventory.Instance.ItemDropped += Inventory_ItemDropped;
         SoundManager.Instance.Play(MixerGroup.Music, "Sounds/creeprs", 0.5f);
     }
 
@@ -68,32 +64,46 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
+        CheckQuit();
+        CheckPickupObject();
+    }
+
+    private void CheckQuit()
+    {
         if (Input.GetKey("escape"))
         {
             Application.Quit();
         }
+    }
 
+    private void CheckPickupObject()
+    {
         if (_pickupObjects.Count > 0 && Input.GetKeyDown("f"))
         {
-            if (_pickupObjects[0] is IInventoryItem)
-            {
-                Debug.Log("inventory item");
-                _inventory.AddItem((IInventoryItem)_pickupObjects[0]);
-            }
-            else if (_pickupObjects[0] is IAmmo)
-            {
-                _ammoSystem.AddAmmo((IAmmo)_pickupObjects[0]);
-            }
+            IPickupObject pickupObject = _pickupObjects[0];
             _pickupObjects.RemoveAt(0);
+            if (pickupObject is IInventoryItem)
+            {
+                Inventory.Instance.AddItem((IInventoryItem)pickupObject);
+            }
+            else if (pickupObject is IAmmo)
+            {
+                AmmoSystem.Instance.AddAmmo((IAmmo)pickupObject);
+            }
             if (_pickupObjects.Count == 0)
             {
                 _hud.HideMessagePanel();
-            } 
+            }
             else
             {
-                _hud.ShowMessagePanel("Press F To Pickup " + _pickupObjects[0].Name);
+                ShowPickupMessage(pickupObject);
             }
         }
+    }
+
+    private void ShowPickupMessage(IPickupObject pickupObject)
+    {
+        _hud.ShowMessagePanel("Press F To Pickup " + pickupObject.Name);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -103,7 +113,7 @@ public class Player : MonoBehaviour
         {
             if (_pickupObjects.Count == 0)
             {
-                _hud.ShowMessagePanel("Press F To Pickup " + pickupObject.Name);
+                ShowPickupMessage(pickupObject);
             }
             _pickupObjects.Add(pickupObject);
         }
@@ -114,7 +124,6 @@ public class Player : MonoBehaviour
         IPickupObject pickupObject = other.GetComponent<IPickupObject>();
         if (pickupObject != null)
         {
-            Debug.Log("exit " + pickupObject.Name);
             _pickupObjects.Remove(pickupObject);
             if (_pickupObjects.Count == 0)
             {
@@ -122,7 +131,7 @@ public class Player : MonoBehaviour
             }
             else
             {
-                _hud.ShowMessagePanel("Press F To Pickup " + _pickupObjects[0].Name);
+                ShowPickupMessage(pickupObject);
             }
         }
     }
