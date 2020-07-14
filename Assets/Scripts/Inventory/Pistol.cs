@@ -11,7 +11,7 @@ public class Pistol : Gun
         base.AmmoType = AmmoType.Pistol;
         base.MagSize = 10;
         base.AmmoLoaded = 10;
-        base.ReloadTime = 1f;
+        base.ReloadTime = 2f;
     }
 
     protected override void OnGunAwake()

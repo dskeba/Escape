@@ -51,9 +51,10 @@ public abstract class Gun : Usable
 
     protected override void OnUsableUpdate()
     {
-        if (Input.GetKeyDown("r") && !_isReloading)
+        if (Input.GetKeyDown("r") && !_isReloading && AmmoSupply.Instance.GetQuantity(AmmoType) > 0)
         {
             _isReloading = true;
+            SoundManager.Instance.Play(MixerGroup.Sound, "Sounds/gun_reload", 0.25f);
         }
 
         if (_isReloading)
