@@ -18,7 +18,7 @@ public class Player : MonoBehaviour
         Inventory.Instance.ItemEquipped += Inventory_ItemEquipped;
         Inventory.Instance.ItemUnequipped += Inventory_ItemUnequipped;
         Inventory.Instance.ItemDropped += Inventory_ItemDropped;
-        SoundManager.Instance.Play(MixerGroup.Music, "Sounds/creeprs", 0.5f);
+        //SoundManager.Instance.Play(MixerGroup.Music, "Sounds/creeprs", 0.5f);
     }
 
     private void Inventory_ItemEquipped(object sender, InventoryEvent inventoryEvent)
@@ -88,7 +88,7 @@ public class Player : MonoBehaviour
             }
             else if (pickupObject is IAmmo)
             {
-                AmmoSystem.Instance.AddAmmo((IAmmo)pickupObject);
+                AmmoSupply.Instance.AddAmmo((IAmmo)pickupObject);
             }
             if (_pickupObjects.Count == 0)
             {

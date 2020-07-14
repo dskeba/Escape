@@ -44,17 +44,17 @@ public class Inventory : Singleton<Inventory>
     {
         if (!items.ContainsKey(index)) { return; }
         if (equippedItemIndex == index) {
-            UnequipItem(equippedItemIndex);
+            UnequipItem(index);
             return;
         } else if (equippedItemIndex >= 0) {
             UnequipItem(equippedItemIndex);
         }
-        equippedItemIndex = index;
-        items[equippedItemIndex].IsEquipped = true;
+        items[index].IsEquipped = true;
         if (ItemEquipped != null)
         {
-            ItemEquipped(this, new InventoryEvent(items[equippedItemIndex]));
+            ItemEquipped(this, new InventoryEvent(items[index]));
         }
+        equippedItemIndex = index;
     }
 
     public void UnequipItem(int index)
@@ -62,21 +62,21 @@ public class Inventory : Singleton<Inventory>
         items[index].IsEquipped = false;
         if (ItemUnequipped != null)
         {
-            ItemUnequipped(this, new InventoryEvent(items[equippedItemIndex]));
+            ItemUnequipped(this, new InventoryEvent(items[index]));
         }
         equippedItemIndex = -1;
     }
 
-    public void DropItem()
+    public void DropItem(int index)
     {
-        if (equippedItemIndex < 0) { return; }
-        items[equippedItemIndex].IsEquipped = false;
-        items[equippedItemIndex].OnDrop();
+        if (index < 0) { return; }
+        UnequipItem(index);
+        items[index].OnDrop();
         if (ItemDropped != null)
         {
-            ItemDropped(this, new InventoryEvent(items[equippedItemIndex]));
+            ItemDropped(this, new InventoryEvent(items[index]));
         }
-        items.Remove(equippedItemIndex);
+        items.Remove(index);
         equippedItemIndex = -1;
     }
 
@@ -102,7 +102,7 @@ public class Inventory : Singleton<Inventory>
     {
         if (Input.GetKeyDown("g"))
         {
-            DropItem();
+            DropItem(equippedItemIndex);
         }
     }
 }

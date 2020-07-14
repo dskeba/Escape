@@ -16,7 +16,7 @@ public class HUD : MonoBehaviour
     [SerializeField]
     private GameObject _ammoPanel;
 
-    private Text _textComponent;
+    private Text _messagePanelText;
     private Text _pistolAmmoText;
     private Text _assaultRifleAmmoText;
     private Text _currentAmmoText;
@@ -29,10 +29,10 @@ public class HUD : MonoBehaviour
         Inventory.Instance.ItemEquipped += Inventory_ItemEquipped;
         Inventory.Instance.ItemUnequipped += Inventory_ItemUnequipped;
 
-        AmmoSystem.Instance.AmmoAdded += AmmoSystem_AmmoAdded;
-        AmmoSystem.Instance.AmmoUsed += AmmoSystem_AmmoUsed;
+        AmmoSupply.Instance.AmmoAdded += AmmoSupply_AmmoAdded;
+        AmmoSupply.Instance.AmmoRemoved += AmmoSupply_AmmoRemoved;
 
-        _textComponent = _messagePanel.transform.Find("Text").GetComponent<Text>();
+        _messagePanelText = _messagePanel.transform.Find("Text").GetComponent<Text>();
         _pistolAmmoText = _ammoPanel.transform.Find("PistolText").GetComponent<Text>();
         _assaultRifleAmmoText = _ammoPanel.transform.Find("AssaultRifleText").GetComponent<Text>();
         _currentAmmoText = _gunPanel.transform.Find("CurrentAmmo").GetComponent<Text>();
@@ -59,44 +59,71 @@ public class HUD : MonoBehaviour
         Transform slot = _inventoryPanel.GetChild(inventoryEvent.Item.Index);
         Image image = slot.GetChild(0).GetComponent<Image>();
         image.color = EQUIPPED_COLOR;
-
-        ShowGunPanel();
+        if (inventoryEvent.Item is Gun)
+        {
+            ShowGunPanel();
+            (inventoryEvent.Item as Gun).Reload += Gun_Reload;
+            (inventoryEvent.Item as Gun).Fire += Gun_Fire;
+            UpdateGunText((inventoryEvent.Item as Gun));
+        }
     }
 
     private void Inventory_ItemUnequipped(object sender, InventoryEvent inventoryEvent)
     {
+        Debug.Log("UNEQUIP");
         Transform slot = _inventoryPanel.GetChild(inventoryEvent.Item.Index);
         Image image = slot.GetChild(0).GetComponent<Image>();
         image.color = UNEQUIPPED_COLOR;
-
-        HideGunPanel();
+        if (inventoryEvent.Item is Gun)
+        {
+            HideGunPanel();
+            (inventoryEvent.Item as Gun).Reload -= Gun_Reload;
+            (inventoryEvent.Item as Gun).Fire -= Gun_Fire;
+            UpdateGunText((inventoryEvent.Item as Gun));
+        }
     }
 
-    private void AmmoSystem_AmmoAdded(object sender, AmmoSystemEvent ammoSystemEvent)
+    private void Gun_Reload(object sender, GunEvent gunEvent)
     {
-        UpdateAmmoText(ammoSystemEvent.Type);
+        UpdateGunText(gunEvent.Gun);
     }
 
-    private void AmmoSystem_AmmoUsed(object sender, AmmoSystemEvent ammoSystemEvent)
+    private void Gun_Fire(object sender, GunEvent gunEvent)
     {
-        UpdateAmmoText(ammoSystemEvent.Type);
+        UpdateGunText(gunEvent.Gun);
+    }
+
+    private void AmmoSupply_AmmoAdded(object sender, AmmoSupplyEvent ammoSupplyEvent)
+    {
+        UpdateAmmoText(ammoSupplyEvent.Type);
+    }
+
+    private void AmmoSupply_AmmoRemoved(object sender, AmmoSupplyEvent ammoSupplyEvent)
+    {
+        UpdateAmmoText(ammoSupplyEvent.Type);
+    }
+
+    private void UpdateGunText(Gun gun)
+    {
+        _currentAmmoText.text = gun.AmmoLoaded.ToString();
+        _totalAmmoText.text = AmmoSupply.Instance.GetQuantity(gun.AmmoType).ToString();
     }
 
     private void UpdateAmmoText(AmmoType type)
     {
         if (type == AmmoType.Pistol)
         {
-            _pistolAmmoText.text = AmmoSystem.Instance.GetQuantity(AmmoType.Pistol).ToString();
+            _pistolAmmoText.text = AmmoSupply.Instance.GetQuantity(AmmoType.Pistol).ToString();
         }
         else if (type == AmmoType.AssaultRifle)
         {
-            _assaultRifleAmmoText.text = AmmoSystem.Instance.GetQuantity(AmmoType.AssaultRifle).ToString();
+            _assaultRifleAmmoText.text = AmmoSupply.Instance.GetQuantity(AmmoType.AssaultRifle).ToString();
         }
     }
 
     public void ShowMessagePanel(string text)
     {
-        _textComponent.text = text;
+        _messagePanelText.text = text;
         _messagePanel.SetActive(true);
     }
 

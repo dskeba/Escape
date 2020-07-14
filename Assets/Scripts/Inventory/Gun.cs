@@ -4,6 +4,9 @@ using System;
 
 public abstract class Gun : Usable
 {
+    public event EventHandler<GunEvent> Reload;
+    public event EventHandler<GunEvent> Fire;
+
     public Transform firePoint;
 
     private GameObject _tracerObject;
@@ -15,12 +18,15 @@ public abstract class Gun : Usable
     private Vector3 _tracerStartPoint;
     private Vector3 _tracerEndPoint;
     private float _tracerMaxDistance = 10000f;
+    private float _reloadTimer = 0f;
+    private bool _isReloading = false;
 
     public Gun() { }
 
     public AmmoType AmmoType { get; set; }
     public int MagSize { get; set; }
     public int AmmoLoaded { get; set; }
+    public float ReloadTime { get; set; }
 
     protected abstract void OnGunAwake();
     protected abstract void OnGunStart();
@@ -45,9 +51,14 @@ public abstract class Gun : Usable
 
     protected override void OnUsableUpdate()
     {
-        if (Input.GetKeyDown("r"))
+        if (Input.GetKeyDown("r") && !_isReloading)
         {
-            ReloadAmmo();
+            _isReloading = true;
+        }
+
+        if (_isReloading)
+        {
+            ReloadTimer();
         }
 
         OnGunUpdate();
@@ -60,6 +71,11 @@ public abstract class Gun : Usable
 
     protected override void OnUse()
     {
+        if (_isReloading)
+        {
+            return;
+        }
+
         if (!UseAmmo())
         {
             SoundManager.Instance.Play(MixerGroup.Sound, "Sounds/empty_fire", 0.25f);
@@ -89,12 +105,29 @@ public abstract class Gun : Usable
         StartCoroutine(DrawTracerForSeconds(_tracerSeconds));
         StartCoroutine(DrawMuzzleFlashForSeconds(_muzzleFlashSeconds));
 
+        if (Fire != null)
+        {
+            Fire(this, new GunEvent(this));
+        }
+
         OnFireGun();
+    }
+
+    private void ReloadTimer()
+    {
+        _reloadTimer += Time.deltaTime;
+        if (_reloadTimer < ReloadTime)
+        {
+            return;
+        }
+        ReloadAmmo();
+        _isReloading = false;
+        _reloadTimer = 0;
     }
 
     private bool ReloadAmmo()
     {
-        int ammoAvailable = AmmoSystem.Instance.GetQuantity(AmmoType);
+        int ammoAvailable = AmmoSupply.Instance.GetQuantity(AmmoType);
         if (ammoAvailable <= 0)
         {
             return false;
@@ -109,8 +142,12 @@ public abstract class Gun : Usable
         {
             ammoReloadAmount = ammoNeeded;
         }
-        AmmoSystem.Instance.RemoveAmmo(AmmoType, ammoReloadAmount);
+        AmmoSupply.Instance.RemoveAmmo(AmmoType, ammoReloadAmount);
         AmmoLoaded += ammoReloadAmount;
+        if (Reload != null)
+        {
+            Reload(this, new GunEvent(this));
+        }
         return true;
     }
 

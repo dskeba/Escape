@@ -11,6 +11,7 @@ public class AssaultRifle : Gun
         base.AmmoType = AmmoType.AssaultRifle;
         base.MagSize = 30;
         base.AmmoLoaded = 30;
+        base.ReloadTime = 1f;
     }
 
     protected override void OnGunAwake() {

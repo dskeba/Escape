@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System;
 
-public class AmmoSystem : Singleton<AmmoSystem>
+public class AmmoSupply : Singleton<AmmoSupply>
 {
-    public event EventHandler<AmmoSystemEvent> AmmoAdded;
-    public event EventHandler<AmmoSystemEvent> AmmoUsed;
+    public event EventHandler<AmmoSupplyEvent> AmmoAdded;
+    public event EventHandler<AmmoSupplyEvent> AmmoRemoved;
 
     private Dictionary<AmmoType, int> currentQuantity;
     private Dictionary<AmmoType, int> maxQuantity;
 
-    public AmmoSystem()
+    public AmmoSupply()
     {
         currentQuantity = new Dictionary<AmmoType, int>();
         currentQuantity.Add(AmmoType.AssaultRifle, 0);
@@ -43,7 +43,7 @@ public class AmmoSystem : Singleton<AmmoSystem>
         {
             if (AmmoAdded != null)
             {
-                AmmoAdded(this, new AmmoSystemEvent(type));
+                AmmoAdded(this, new AmmoSupplyEvent(type));
             }
         }
     }
@@ -55,9 +55,9 @@ public class AmmoSystem : Singleton<AmmoSystem>
             return false;
         }
         currentQuantity[type] -= quantity;
-        if (AmmoUsed != null)
+        if (AmmoRemoved != null)
         {
-            AmmoUsed(this, new AmmoSystemEvent(type));
+            AmmoRemoved(this, new AmmoSupplyEvent(type));
         }
         return true;
     }
