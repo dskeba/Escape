@@ -20,6 +20,7 @@ public abstract class Gun : Usable
     private float _tracerMaxDistance = 10000f;
     private float _reloadTimer = 0f;
     private bool _isReloading = false;
+    private AudioSource _reloadAudioSource;
 
     public Gun() { }
 
@@ -54,7 +55,7 @@ public abstract class Gun : Usable
         if (Input.GetKeyDown("r") && !_isReloading && AmmoSupply.Instance.GetQuantity(AmmoType) > 0)
         {
             _isReloading = true;
-            SoundManager.Instance.Play(MixerGroup.Sound, "Sounds/gun_reload", 0.25f);
+            _reloadAudioSource = SoundManager.Instance.Play(MixerGroup.Sound, "Sounds/gun_reload", 0.25f);
         }
 
         if (_isReloading)
@@ -114,14 +115,28 @@ public abstract class Gun : Usable
         OnFireGun();
     }
 
+    protected override void OnUsableDrop()
+    {
+        ResetReload();
+    }
+
     private void ReloadTimer()
     {
         _reloadTimer += Time.deltaTime;
         if (_reloadTimer < ReloadTime)
         {
-            return;
+            return; 
         }
         ReloadAmmo();
+        ResetReload();
+    }
+
+    private void ResetReload()
+    {
+        if (_reloadAudioSource != null)
+        {
+            _reloadAudioSource.Stop();
+        }
         _isReloading = false;
         _reloadTimer = 0;
     }

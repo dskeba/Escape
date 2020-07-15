@@ -25,4 +25,5 @@ public class Medkit : Consumable
         Debug.Log("USE MEDKIT");
     }
 
+    protected override void OnUsableDrop() { }
 }

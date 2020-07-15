@@ -13,6 +13,7 @@ public abstract class InventoryItemBase : MonoBehaviour, IInventoryItem
     protected abstract void OnBaseStart();
     protected abstract void OnBaseFixedUpdate();
     protected abstract void OnBaseUpdate();
+    protected abstract void OnBaseDrop();
 
     private void Awake()
     {
@@ -46,6 +47,8 @@ public abstract class InventoryItemBase : MonoBehaviour, IInventoryItem
         }
         Rigidbody rb = gameObject.AddComponent<Rigidbody>();
         rb.AddForce(transform.forward * 5.0f, ForceMode.Impulse);
+
+        OnBaseDrop();
     }
 
     public void OnPickup()

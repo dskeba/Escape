@@ -20,6 +20,7 @@ public abstract class Usable : InventoryItemBase
     protected abstract void OnUsableStart();
     protected abstract void OnUsableFixedUpdate();
     protected abstract void OnUsableUpdate();
+    protected abstract void OnUsableDrop();
     protected abstract void OnUse();
 
     protected override void OnBaseAwake()
@@ -52,5 +53,10 @@ public abstract class Usable : InventoryItemBase
     protected override void OnBaseFixedUpdate()
     {
         OnUsableFixedUpdate();
+    }
+
+    protected override void OnBaseDrop()
+    {
+        OnUsableDrop();
     }
 }

@@ -47,6 +47,7 @@ public class Player : MonoBehaviour
         IInventoryItem item = inventoryEvent.Item;
         GameObject goItem = (item as MonoBehaviour).gameObject;
         goItem.transform.parent = transform.parent;
+        Debug.Log(goItem.transform.parent);
         SetItemEquipped(item, false);
     }
 
