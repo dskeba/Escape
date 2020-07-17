@@ -63,14 +63,13 @@ public class HUD : MonoBehaviour
         {
             ShowGunPanel();
             (inventoryEvent.Item as Gun).Reload += Gun_Reload;
-            (inventoryEvent.Item as Gun).Fire += Gun_Fire;
+            (inventoryEvent.Item as Gun).Shoot += Gun_Shoot;
             UpdateGunText((inventoryEvent.Item as Gun));
         }
     }
 
     private void Inventory_ItemUnequipped(object sender, InventoryEvent inventoryEvent)
     {
-        Debug.Log("UNEQUIP");
         Transform slot = _inventoryPanel.GetChild(inventoryEvent.Item.Index);
         Image image = slot.GetChild(0).GetComponent<Image>();
         image.color = UNEQUIPPED_COLOR;
@@ -78,7 +77,7 @@ public class HUD : MonoBehaviour
         {
             HideGunPanel();
             (inventoryEvent.Item as Gun).Reload -= Gun_Reload;
-            (inventoryEvent.Item as Gun).Fire -= Gun_Fire;
+            (inventoryEvent.Item as Gun).Shoot -= Gun_Shoot;
             UpdateGunText((inventoryEvent.Item as Gun));
         }
     }
@@ -88,7 +87,7 @@ public class HUD : MonoBehaviour
         UpdateGunText(gunEvent.Gun);
     }
 
-    private void Gun_Fire(object sender, GunEvent gunEvent)
+    private void Gun_Shoot(object sender, GunEvent gunEvent)
     {
         UpdateGunText(gunEvent.Gun);
     }

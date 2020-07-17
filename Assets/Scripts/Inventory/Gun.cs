@@ -5,7 +5,7 @@ using System;
 public abstract class Gun : Usable
 {
     public event EventHandler<GunEvent> Reload;
-    public event EventHandler<GunEvent> Fire;
+    public event EventHandler<GunEvent> Shoot;
 
     public Transform firePoint;
 
@@ -21,6 +21,9 @@ public abstract class Gun : Usable
     private float _reloadTimer = 0f;
     private bool _isReloading = false;
     private AudioSource _reloadAudioSource;
+    private float _bloomResetTime;
+    private float _shotTimer = 0f;
+    private float _lastShotTime;
 
     public Gun() { }
 
@@ -28,12 +31,19 @@ public abstract class Gun : Usable
     public int MagSize { get; set; }
     public int AmmoLoaded { get; set; }
     public float ReloadTime { get; set; }
+    public float Bloom { get; set; }
+
+    public float BloomResetTime
+    {
+        get => _bloomResetTime;
+        set => _bloomResetTime = _shotTimer = value;
+    }
 
     protected abstract void OnGunAwake();
     protected abstract void OnGunStart();
     protected abstract void OnGunFixedUpdate();
     protected abstract void OnGunUpdate();
-    protected abstract void OnFireGun();
+    protected abstract void OnGunShoot();
 
     protected override void OnUsableAwake()
     {
@@ -52,7 +62,7 @@ public abstract class Gun : Usable
 
     protected override void OnUsableUpdate()
     {
-        if (Input.GetKeyDown("r") && !_isReloading && AmmoSupply.Instance.GetQuantity(AmmoType) > 0)
+        if (Input.GetKeyDown("r") && !_isReloading && AmmoSupply.Instance.GetQuantity(AmmoType) > 0 && AmmoLoaded < MagSize)
         {
             _isReloading = true;
             _reloadAudioSource = SoundManager.Instance.Play(MixerGroup.Sound, "Sounds/gun_reload", 0.25f);
@@ -62,6 +72,8 @@ public abstract class Gun : Usable
         {
             ReloadTimer();
         }
+
+        ShotTimer();
 
         OnGunUpdate();
     }
@@ -84,7 +96,33 @@ public abstract class Gun : Usable
             return;
         }
 
-        Ray ray = Camera.main.ViewportPointToRay(Vector3.one * 0.5f);
+        ShootGun();
+    }
+
+    private void ShotTimer()
+    {
+        _shotTimer += Time.deltaTime;
+    }
+
+    private void ShootGun()
+    {
+        float bloomAmount;
+        if (_shotTimer > _bloomResetTime)
+        {
+            bloomAmount = 0f;
+        }
+        else
+        {
+            bloomAmount = (_bloomResetTime - _shotTimer) / _bloomResetTime * Bloom;
+        }
+        _shotTimer = 0f;
+
+        float aimX = 0.5f + (UnityEngine.Random.Range(-1f, 1f) * bloomAmount);
+        float aimY = 0.5f + (UnityEngine.Random.Range(-1f, 1f) * bloomAmount);
+        Vector3 aimPoint = new Vector3(aimX, aimY);
+        Debug.Log(aimX + " " + aimY);
+        Ray ray = Camera.main.ViewportPointToRay(aimPoint);
+
         _tracerStartPoint = firePoint.position;
         _tracerEndPoint = ray.direction * _tracerMaxDistance;
         RaycastHit hit;
@@ -107,12 +145,12 @@ public abstract class Gun : Usable
         StartCoroutine(DrawTracerForSeconds(_tracerSeconds));
         StartCoroutine(DrawMuzzleFlashForSeconds(_muzzleFlashSeconds));
 
-        if (Fire != null)
+        if (Shoot != null)
         {
-            Fire(this, new GunEvent(this));
+            Shoot(this, new GunEvent(this));
         }
 
-        OnFireGun();
+        OnGunShoot();
     }
 
     protected override void OnUsableDrop()

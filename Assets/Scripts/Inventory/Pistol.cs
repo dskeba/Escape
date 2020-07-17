@@ -12,6 +12,8 @@ public class Pistol : Gun
         base.MagSize = 10;
         base.AmmoLoaded = 10;
         base.ReloadTime = 2f;
+        base.Bloom = 0.01f;
+        base.BloomResetTime = 0.5f;
     }
 
     protected override void OnGunAwake()
@@ -25,7 +27,7 @@ public class Pistol : Gun
 
     protected override void OnGunUpdate() { }
 
-    protected override void OnFireGun()
+    protected override void OnGunShoot()
     {
         SoundManager.Instance.Play(MixerGroup.Sound, "Sounds/pistol_shot", 0.5f);
 

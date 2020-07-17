@@ -12,6 +12,8 @@ public class AssaultRifle : Gun
         base.MagSize = 30;
         base.AmmoLoaded = 30;
         base.ReloadTime = 2f;
+        base.Bloom = 0.01f;
+        base.BloomResetTime = 1f;
     }
 
     protected override void OnGunAwake() {
@@ -24,7 +26,7 @@ public class AssaultRifle : Gun
 
     protected override void OnGunUpdate() { }
 
-    protected override void OnFireGun()
+    protected override void OnGunShoot()
     {
         SoundManager.Instance.Play(MixerGroup.Sound, "Sounds/assault_rifle_shot", 0.5f);
     }
