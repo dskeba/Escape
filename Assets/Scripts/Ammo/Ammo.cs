@@ -8,5 +8,6 @@ public interface IAmmo : IPickupObject
 public enum AmmoType
 {
     Pistol,
-    AssaultRifle
+    AssaultRifle,
+    Shotgun
 }

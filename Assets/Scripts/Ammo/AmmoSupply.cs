@@ -15,10 +15,12 @@ public class AmmoSupply : Singleton<AmmoSupply>
         currentQuantity = new Dictionary<AmmoType, int>();
         currentQuantity.Add(AmmoType.AssaultRifle, 0);
         currentQuantity.Add(AmmoType.Pistol, 0);
+        currentQuantity.Add(AmmoType.Shotgun, 0);
 
         maxQuantity = new Dictionary<AmmoType, int>();
         maxQuantity.Add(AmmoType.AssaultRifle, 240);
         maxQuantity.Add(AmmoType.Pistol, 120);
+        maxQuantity.Add(AmmoType.Shotgun, 60);
     }
 
     public int GetQuantity(AmmoType type)
