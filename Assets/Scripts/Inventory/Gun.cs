@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using System.Collections.Generic;
 
 public abstract class Gun : Usable
 {
@@ -9,8 +10,8 @@ public abstract class Gun : Usable
 
     public Transform firePoint;
 
-    private GameObject _tracerObject;
-    private LineRenderer _tracerLineRenderer;
+    private GameObject[] _tracerObjects;
+    private LineRenderer[] _tracerLineRenderers;
     private GameObject _muzzleFlashObject;
     private Light _muzzleFlashLight;
     private float _muzzleFlashSeconds = 0.015f;
@@ -23,7 +24,6 @@ public abstract class Gun : Usable
     private AudioSource _reloadAudioSource;
     private float _bloomResetTime;
     private float _shotTimer = 0f;
-    private float _lastShotTime;
 
     public Gun() { }
 
@@ -31,7 +31,9 @@ public abstract class Gun : Usable
     public int MagSize { get; set; }
     public int AmmoLoaded { get; set; }
     public float ReloadTime { get; set; }
-    public float Bloom { get; set; }
+    public float MaxBloom { get; set; }
+    public float MinBloom { get; set; }
+    public int BulletsPerShot { get; set; }
 
     public float BloomResetTime
     {
@@ -52,8 +54,13 @@ public abstract class Gun : Usable
 
     protected override void OnUsableStart()
     {
-        _tracerObject = GameObject.FindGameObjectWithTag("Tracer");
-        _tracerLineRenderer = _tracerObject.GetComponent<LineRenderer>();
+        _tracerObjects = GameObject.FindGameObjectsWithTag("Tracer");
+        _tracerLineRenderers = new LineRenderer[_tracerObjects.Length];
+        for (int i = 0; i < _tracerObjects.Length; i++)
+        {
+            _tracerLineRenderers[i] = _tracerObjects[i].GetComponent<LineRenderer>();
+        }
+        
         _muzzleFlashObject = GameObject.FindGameObjectWithTag("MuzzleFlash");
         _muzzleFlashLight = _muzzleFlashObject.GetComponent<Light>();
 
@@ -109,40 +116,43 @@ public abstract class Gun : Usable
         float bloomAmount;
         if (_shotTimer > _bloomResetTime)
         {
-            bloomAmount = 0f;
+            bloomAmount = MinBloom;
         }
         else
         {
-            bloomAmount = (_bloomResetTime - _shotTimer) / _bloomResetTime * Bloom;
+            bloomAmount = ((_bloomResetTime - _shotTimer) / _bloomResetTime * (MaxBloom - MinBloom)) + MinBloom;
         }
         _shotTimer = 0f;
 
-        float aimX = 0.5f + (UnityEngine.Random.Range(-1f, 1f) * bloomAmount);
-        float aimY = 0.5f + (UnityEngine.Random.Range(-1f, 1f) * bloomAmount);
-        Vector3 aimPoint = new Vector3(aimX, aimY);
-        Debug.Log(aimX + " " + aimY);
-        Ray ray = Camera.main.ViewportPointToRay(aimPoint);
-
-        _tracerStartPoint = firePoint.position;
-        _tracerEndPoint = ray.direction * _tracerMaxDistance;
-        RaycastHit hit;
-        int layerMask = 1 << 10;
-
-        if (Physics.Raycast(ray, out hit, _tracerMaxDistance, layerMask))
+        for (int i = 0; i < BulletsPerShot; i++)
         {
-            if (hit.collider.gameObject.layer != LayerMask.NameToLayer("Ground"))
-            {
-                var parentTransform = hit.collider.transform.root;
-                var colliderHealth = parentTransform.GetComponent<ZombieHealth>();
-                if (colliderHealth != null)
-                {
-                    colliderHealth.TakeDamage(25, hit.point);
-                }
-            }
-            _tracerEndPoint = hit.point;
-        }
+            float aimX = 0.5f + (UnityEngine.Random.Range(-1f, 1f) * bloomAmount);
+            float aimY = 0.5f + (UnityEngine.Random.Range(-1f, 1f) * bloomAmount);
+            Vector3 aimPoint = new Vector3(aimX, aimY);
+            Debug.Log(i + ": " + aimX + " " + aimY);
+            Ray ray = Camera.main.ViewportPointToRay(aimPoint);
 
-        StartCoroutine(DrawTracerForSeconds(_tracerSeconds));
+            _tracerStartPoint = firePoint.position;
+            _tracerEndPoint = ray.direction * _tracerMaxDistance;
+            RaycastHit hit;
+            int layerMask = 1 << 10;
+
+            if (Physics.Raycast(ray, out hit, _tracerMaxDistance, layerMask))
+            {
+                if (hit.collider.gameObject.layer != LayerMask.NameToLayer("Ground"))
+                {
+                    var parentTransform = hit.collider.transform.root;
+                    var colliderHealth = parentTransform.GetComponent<ZombieHealth>();
+                    if (colliderHealth != null)
+                    {
+                        colliderHealth.TakeDamage(25, hit.point);
+                    }
+                }
+                _tracerEndPoint = hit.point;
+            }
+
+            StartCoroutine(DrawTracerForSeconds(_tracerSeconds, i));
+        }
         StartCoroutine(DrawMuzzleFlashForSeconds(_muzzleFlashSeconds));
 
         if (Shoot != null)
@@ -218,20 +228,16 @@ public abstract class Gun : Usable
     private IEnumerator DrawMuzzleFlashForSeconds(float seconds)
     {
         _muzzleFlashLight.enabled = true;
-
         yield return new WaitForSeconds(seconds);
-
         _muzzleFlashLight.enabled = false;
     }
 
-    private IEnumerator DrawTracerForSeconds(float seconds)
+    private IEnumerator DrawTracerForSeconds(float seconds, int i)
     {
-        _tracerLineRenderer.SetPosition(0, _tracerStartPoint);
-        _tracerLineRenderer.SetPosition(1, _tracerEndPoint);
-        _tracerLineRenderer.enabled = true;
-
+        _tracerLineRenderers[i].SetPosition(0, _tracerStartPoint);
+        _tracerLineRenderers[i].SetPosition(1, _tracerEndPoint);
+        _tracerLineRenderers[i].enabled = true;
         yield return new WaitForSeconds(seconds);
-
-        _tracerLineRenderer.enabled = false;
+        _tracerLineRenderers[i].enabled = false;
     }
 }

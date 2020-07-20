@@ -12,8 +12,10 @@ public class AssaultRifle : Gun
         base.MagSize = 30;
         base.AmmoLoaded = 30;
         base.ReloadTime = 2f;
-        base.Bloom = 0.01f;
+        base.MaxBloom = 0.01f;
+        base.MinBloom = 0f;
         base.BloomResetTime = 1f;
+        base.BulletsPerShot = 1;
     }
 
     protected override void OnGunAwake() {

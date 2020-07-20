@@ -12,8 +12,10 @@ public class Shotgun : Gun
         base.MagSize = 5;
         base.AmmoLoaded = 5;
         base.ReloadTime = 2f;
-        base.Bloom = 0.01f;
+        base.MaxBloom = 0.5f;
+        base.MinBloom = 0.025f;
         base.BloomResetTime = 0.25f;
+        base.BulletsPerShot = 5;
     }
 
     protected override void OnGunAwake()

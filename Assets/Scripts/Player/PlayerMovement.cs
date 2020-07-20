@@ -17,6 +17,7 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody _rb;
     private Animator _animator;
     private Vector2 _input;
+    private Vector3 _prevPosition;
 
     private void Start()
     {
@@ -88,8 +89,6 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        PreventIdleMovement();
-
         var forward = _mainCamera.transform.forward;
         var right = _mainCamera.transform.right;
         forward.y = 0f;
@@ -98,14 +97,17 @@ public class PlayerMovement : MonoBehaviour
         right.Normalize();
         var destination = transform.position + (forward * _input.y + right * _input.x) * Time.deltaTime * _speed;
         _rb.MovePosition(destination);
+
+        PreventIdleMovement();
     }
 
     private void PreventIdleMovement()
     {
-        if (_isGrounded && _input.x == 0 && _input.y == 0)
+        if (_input.y == 0 && _input.x == 0 && _isGrounded)
         {
-            _rb.velocity = Vector3.zero;
+            transform.position = _prevPosition;
         }
+        _prevPosition = transform.position;
     }
 
 }

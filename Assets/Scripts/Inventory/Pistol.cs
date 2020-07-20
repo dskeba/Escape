@@ -12,8 +12,10 @@ public class Pistol : Gun
         base.MagSize = 10;
         base.AmmoLoaded = 10;
         base.ReloadTime = 2f;
-        base.Bloom = 0.01f;
+        base.MaxBloom = 0.01f;
+        base.MinBloom = 0f;
         base.BloomResetTime = 0.5f;
+        base.BulletsPerShot = 1;
     }
 
     protected override void OnGunAwake()
