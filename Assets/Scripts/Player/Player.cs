@@ -56,10 +56,12 @@ public class Player : MonoBehaviour
         if (item is Gun)
         {
             _animator.SetBool("GunEquipped", equipped);
+            SoundManager.Instance.Play(MixerGroup.Sound, "Sounds/pickup", 0.25f);
         }
         else if (item is Consumable)
         {
             _animator.SetBool("ConsumableEquipped", equipped);
+            SoundManager.Instance.Play(MixerGroup.Sound, "Sounds/pickup", 0.25f);
         }
     }
 

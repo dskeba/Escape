@@ -20,7 +20,7 @@ public class Shotgun : Gun
 
     protected override void OnGunAwake()
     {
-        base.Image = Resources.Load<Sprite>("Sprites/Pistol");
+        base.Image = Resources.Load<Sprite>("Sprites/Shotgun");
     }
 
     protected override void OnGunStart() { }
@@ -31,6 +31,6 @@ public class Shotgun : Gun
 
     protected override void OnGunShoot()
     {
-        SoundManager.Instance.Play(MixerGroup.Sound, "Sounds/pistol_shot", 0.5f);
+        SoundManager.Instance.Play(MixerGroup.Sound, "Sounds/shotgun_fire_2", 0.25f);
     }
 }

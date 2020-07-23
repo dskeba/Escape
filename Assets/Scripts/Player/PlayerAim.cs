@@ -46,7 +46,7 @@ public class PlayerAim : MonoBehaviour
             var offset = _targetAngle + 90;
             _targetAngle = -offset;
         }
-        transform.eulerAngles = new Vector3(0, yawCamera + _targetAngle, 0);
+        transform.eulerAngles = new Vector3(0, yawCamera + _targetAngle + 5f, 0);
         _playerHipsObject.transform.localEulerAngles = new Vector3(0f, -_targetAngle/2, 0f);
     }
 
@@ -61,6 +61,6 @@ public class PlayerAim : MonoBehaviour
         {
             pitchCamera = 315;
         }
-        _playerTorsoObject.transform.localEulerAngles = new Vector3(pitchCamera, -_targetAngle/2, 0f);
+        _playerTorsoObject.transform.localEulerAngles = new Vector3(pitchCamera - 5f, -_targetAngle/2, 0f);
     }
 }

@@ -18,6 +18,7 @@ public class HUD : MonoBehaviour
 
     private Text _messagePanelText;
     private Text _pistolAmmoText;
+    private Text _shotgunAmmoText;
     private Text _assaultRifleAmmoText;
     private Text _currentAmmoText;
     private Text _totalAmmoText;
@@ -34,6 +35,7 @@ public class HUD : MonoBehaviour
 
         _messagePanelText = _messagePanel.transform.Find("Text").GetComponent<Text>();
         _pistolAmmoText = _ammoPanel.transform.Find("PistolText").GetComponent<Text>();
+        _shotgunAmmoText = _ammoPanel.transform.Find("ShotgunText").GetComponent<Text>();
         _assaultRifleAmmoText = _ammoPanel.transform.Find("AssaultRifleText").GetComponent<Text>();
         _currentAmmoText = _gunPanel.transform.Find("CurrentAmmo").GetComponent<Text>();
         _totalAmmoText = _gunPanel.transform.Find("TotalAmmo").GetComponent<Text>();
@@ -113,6 +115,10 @@ public class HUD : MonoBehaviour
         if (type == AmmoType.Pistol)
         {
             _pistolAmmoText.text = AmmoSupply.Instance.GetQuantity(AmmoType.Pistol).ToString();
+        }
+        else if (type == AmmoType.Shotgun)
+        {
+            _shotgunAmmoText.text = AmmoSupply.Instance.GetQuantity(AmmoType.Shotgun).ToString();
         }
         else if (type == AmmoType.AssaultRifle)
         {
