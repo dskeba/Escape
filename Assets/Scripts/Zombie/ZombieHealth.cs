@@ -1,30 +1,28 @@
 ﻿using UnityEngine;
 
-public class ZombieHealth : MonoBehaviour
+public class ZombieHealth : HealthBase
 {
-
-    private int maxHealth = 100;
-    private int minHealth = 0;
-    private int currentHealth = 100;
     private GameObject bloodObject;
+    private Animator _animator;
+
+    public ZombieHealth() {
+        base.MaxHealth = 100;
+        base.CurrentHealth = base.MaxHealth;
+    }
 
     private void Start()
     {
         bloodObject = Resources.Load<GameObject>("Prefabs/Blood");
+        _animator = GetComponent<Animator>();
     }
 
-    public void TakeDamage(int amount, Vector3 position)
+    protected override void OnBaseTakeDamage(int damage, Vector3 position)
     {
-        currentHealth -= amount;
         Instantiate(bloodObject, position, Quaternion.identity);
     }
 
-    public void Heal(int amount)
+    protected override void OnBaseDie()
     {
-        currentHealth += amount;
-        if (currentHealth > maxHealth)
-        {
-            currentHealth = maxHealth;
-        }
+        // TODO: Die
     }
 }

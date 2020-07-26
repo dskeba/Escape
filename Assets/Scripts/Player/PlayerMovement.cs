@@ -19,7 +19,6 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody _rb;
     private Animator _animator;
     private Vector2 _input;
-    private Vector3 _prevPosition;
 
     private void Start()
     {

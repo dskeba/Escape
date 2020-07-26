@@ -141,7 +141,7 @@ public abstract class Gun : Usable
                 if (hit.collider.gameObject.layer != LayerMask.NameToLayer("Ground"))
                 {
                     var parentTransform = hit.collider.transform.root;
-                    var colliderHealth = parentTransform.GetComponent<ZombieHealth>();
+                    var colliderHealth = parentTransform.GetComponent<HealthBase>();
                     if (colliderHealth != null)
                     {
                         colliderHealth.TakeDamage(25, hit.point);
