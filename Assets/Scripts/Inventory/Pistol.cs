@@ -8,7 +8,7 @@ public class Pistol : Gun
         base.Name = "Pistol";
         base.UseRate = 0.2f;
         base.IsAuto = false;
-        base.AmmoType = AmmoType.Pistol;
+        base.AmmoType = new PistolAmmoType();
         base.MagSize = 10;
         base.AmmoLoaded = 10;
         base.ReloadTime = 2f;

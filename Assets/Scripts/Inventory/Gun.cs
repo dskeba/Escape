@@ -27,7 +27,7 @@ public abstract class Gun : Usable
 
     public Gun() { }
 
-    public AmmoType AmmoType { get; set; }
+    public IAmmoType AmmoType { get; set; }
     public int MagSize { get; set; }
     public int AmmoLoaded { get; set; }
     public float ReloadTime { get; set; }
@@ -69,7 +69,7 @@ public abstract class Gun : Usable
 
     protected override void OnUsableUpdate()
     {
-        if (Input.GetKeyDown("r") && !_isReloading && AmmoSupply.Instance.GetQuantity(AmmoType) > 0 && AmmoLoaded < MagSize)
+        if (Input.GetKeyDown("r") && !_isReloading && AmmoSupply.Instance.GetQuantity(AmmoType.Name) > 0 && AmmoLoaded < MagSize)
         {
             _isReloading = true;
             _reloadAudioSource = SoundManager.Instance.Play(MixerGroup.Sound, "Sounds/gun_reload", 0.25f);
@@ -129,7 +129,6 @@ public abstract class Gun : Usable
             float aimX = 0.5f + (UnityEngine.Random.Range(-1f, 1f) * bloomAmount);
             float aimY = 0.5f + (UnityEngine.Random.Range(-1f, 1f) * bloomAmount);
             Vector3 aimPoint = new Vector3(aimX, aimY);
-            Debug.Log(i + ": " + aimX + " " + aimY);
             Ray ray = Camera.main.ViewportPointToRay(aimPoint);
 
             _tracerStartPoint = firePoint.position;
@@ -191,7 +190,7 @@ public abstract class Gun : Usable
 
     private bool ReloadAmmo()
     {
-        int ammoAvailable = AmmoSupply.Instance.GetQuantity(AmmoType);
+        int ammoAvailable = AmmoSupply.Instance.GetQuantity(AmmoType.Name);
         if (ammoAvailable <= 0)
         {
             return false;
@@ -206,7 +205,7 @@ public abstract class Gun : Usable
         {
             ammoReloadAmount = ammoNeeded;
         }
-        AmmoSupply.Instance.RemoveAmmo(AmmoType, ammoReloadAmount);
+        AmmoSupply.Instance.RemoveAmmo(AmmoType.Name, ammoReloadAmount);
         AmmoLoaded += ammoReloadAmount;
         if (Reload != null)
         {

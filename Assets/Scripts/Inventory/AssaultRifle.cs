@@ -8,7 +8,7 @@ public class AssaultRifle : Gun
         base.Name = "Assault Rifle";
         base.UseRate = 0.2f;
         base.IsAuto = true;
-        base.AmmoType = AmmoType.AssaultRifle;
+        base.AmmoType = new AssaultRifleAmmoType();
         base.MagSize = 30;
         base.AmmoLoaded = 30;
         base.ReloadTime = 2f;

@@ -3,10 +3,10 @@ using System;
 
 public class AmmoSupplyEvent : EventArgs
 {
-    public AmmoType Type;
+    public AmmoName Name;
 
-    public AmmoSupplyEvent(AmmoType type)
+    public AmmoSupplyEvent(AmmoName name)
     {
-        Type = type;
+        Name = name;
     }
 }

@@ -1,12 +1,13 @@
 ﻿using UnityEngine;
+using System.Collections;
 
-public abstract class AmmoBase : MonoBehaviour, IAmmo
+public abstract class AmmoStackBase : MonoBehaviour, IAmmoStack
 {
-    public AmmoBase() { }
+    public AmmoStackBase() { }
 
     public string Name { get; set; }
     public int Quantity { get; set; }
-    public AmmoType Type { get; set; }
+    public IAmmoType AmmoType { get; set; }
 
     protected abstract void OnBaseAwake();
     protected abstract void OnBaseStart();

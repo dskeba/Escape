@@ -9,7 +9,6 @@ public class PlayerAim : MonoBehaviour
     private GameObject _playerHipsObject;
     [SerializeField]
     private GameObject _playerTorsoObject;
-    [SerializeField]
     private Animator _animator;
     private Vector3 _input;
 

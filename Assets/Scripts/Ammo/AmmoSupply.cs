@@ -7,59 +7,59 @@ public class AmmoSupply : Singleton<AmmoSupply>
     public event EventHandler<AmmoSupplyEvent> AmmoAdded;
     public event EventHandler<AmmoSupplyEvent> AmmoRemoved;
 
-    private Dictionary<AmmoType, int> currentQuantity;
-    private Dictionary<AmmoType, int> maxQuantity;
+    private Dictionary<AmmoName, int> currentQuantity;
+    private Dictionary<AmmoName, int> maxQuantity;
 
     public AmmoSupply()
     {
-        currentQuantity = new Dictionary<AmmoType, int>();
-        currentQuantity.Add(AmmoType.AssaultRifle, 0);
-        currentQuantity.Add(AmmoType.Pistol, 0);
-        currentQuantity.Add(AmmoType.Shotgun, 0);
+        currentQuantity = new Dictionary<AmmoName, int>();
+        currentQuantity.Add(AmmoName.AssaultRifle, 0);
+        currentQuantity.Add(AmmoName.Pistol, 0);
+        currentQuantity.Add(AmmoName.Shotgun, 0);
 
-        maxQuantity = new Dictionary<AmmoType, int>();
-        maxQuantity.Add(AmmoType.AssaultRifle, 240);
-        maxQuantity.Add(AmmoType.Pistol, 120);
-        maxQuantity.Add(AmmoType.Shotgun, 60);
+        maxQuantity = new Dictionary<AmmoName, int>();
+        maxQuantity.Add(AmmoName.AssaultRifle, 240);
+        maxQuantity.Add(AmmoName.Pistol, 120);
+        maxQuantity.Add(AmmoName.Shotgun, 60);
     }
 
-    public int GetQuantity(AmmoType type)
+    public int GetQuantity(AmmoName name)
     {
-        return currentQuantity[type];
+        return currentQuantity[name];
     }
 
-    public void AddAmmo(IAmmo ammo)
+    public void AddAmmo(IAmmoStack ammoStack)
     {
-        AddAmmo(ammo.Type, ammo.Quantity);
-        ammo.OnPickup();
+        AddAmmo(ammoStack.AmmoType.Name, ammoStack.Quantity);
+        ammoStack.OnPickup();
     }
 
-    public void AddAmmo(AmmoType type, int quantity)
+    public void AddAmmo(AmmoName name, int quantity)
     {
-        currentQuantity[type] += quantity;
-        if (currentQuantity[type] > maxQuantity[type])
+        currentQuantity[name] += quantity;
+        if (currentQuantity[name] > maxQuantity[name])
         {
-            currentQuantity[type] = maxQuantity[type];
+            currentQuantity[name] = maxQuantity[name];
         }
         else
         {
             if (AmmoAdded != null)
             {
-                AmmoAdded(this, new AmmoSupplyEvent(type));
+                AmmoAdded(this, new AmmoSupplyEvent(name));
             }
         }
     }
 
-    public bool RemoveAmmo(AmmoType type, int quantity)
+    public bool RemoveAmmo(AmmoName name, int quantity)
     {
-        if (currentQuantity[type] <= 0)
+        if (currentQuantity[name] <= 0)
         {
             return false;
         }
-        currentQuantity[type] -= quantity;
+        currentQuantity[name] -= quantity;
         if (AmmoRemoved != null)
         {
-            AmmoRemoved(this, new AmmoSupplyEvent(type));
+            AmmoRemoved(this, new AmmoSupplyEvent(name));
         }
         return true;
     }

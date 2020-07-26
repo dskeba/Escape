@@ -7,11 +7,13 @@ public class PlayerMovement : MonoBehaviour
 {
     public PostProcessProfile postProcessProfile;
 
-    private float _speed = 6f;
+    private float _walkSpeed = 7f;
+    private float _runSpeed = 14f;
+    private float _currentSpeed = 0f;
     private float _jumpForce = 18f;
     private float _jumpTimer;
     private float _jumpRate = 1f;
-    private float _jumpDelay = 0.2f;
+    private float _jumpDelay = 0.15f;
     private Camera _mainCamera;
     private bool _isGrounded = false;
     private Rigidbody _rb;
@@ -56,9 +58,9 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetButton("Fire3") && _input.y > 0)
         {
             vignette.intensity.value = 0.2f;
-            chromaticAberration.intensity.value = 0.35f;
+            chromaticAberration.intensity.value = 0.25f;
             _animator.SetBool("Running", true);
-            _speed = 11f;
+            _currentSpeed = _runSpeed;
 
         }
         else
@@ -66,7 +68,7 @@ public class PlayerMovement : MonoBehaviour
             vignette.intensity.value = 0.2f;
             chromaticAberration.intensity.value = 0f;
             _animator.SetBool("Running", false);
-            _speed = 6f;
+            _currentSpeed = _walkSpeed;
         }
     }
 
@@ -95,7 +97,7 @@ public class PlayerMovement : MonoBehaviour
         right.y = 0f;
         forward.Normalize();
         right.Normalize();
-        var destination = transform.position + (forward * _input.y + right * _input.x) * Time.deltaTime * _speed;
+        var destination = transform.position + (forward * _input.y + right * _input.x) * Time.deltaTime * _currentSpeed;
         _rb.MovePosition(destination);
 
         PreventIdleMovement();

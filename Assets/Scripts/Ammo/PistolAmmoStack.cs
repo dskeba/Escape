@@ -1,9 +1,9 @@
 ﻿
-public class PistolAmmo : AmmoBase
+public class PistolAmmoStack : AmmoStackBase
 {
-    public PistolAmmo() {
+    public PistolAmmoStack() {
         base.Name = "Pistol Ammo";
-        base.Type = AmmoType.Pistol;
+        base.AmmoType = new PistolAmmoType();
         base.Quantity = 10;
     }
 

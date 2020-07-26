@@ -1,10 +1,11 @@
 ﻿
-public class ShotgunAmmo : AmmoBase
+public class AssaultRifleAmmoStack : AmmoStackBase
 {
-    public ShotgunAmmo() {
-        base.Name = "Shotgun Ammo";
-        base.Type = AmmoType.Shotgun;
-        base.Quantity = 5;
+    public AssaultRifleAmmoStack()
+    {
+        base.Name = "Rifle Ammo";
+        base.AmmoType = new AssaultRifleAmmoType();
+        base.Quantity = 30;
     }
 
     protected override void OnBaseAwake() { }

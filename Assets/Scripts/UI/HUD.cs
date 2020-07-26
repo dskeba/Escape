@@ -22,6 +22,7 @@ public class HUD : MonoBehaviour
     private Text _assaultRifleAmmoText;
     private Text _currentAmmoText;
     private Text _totalAmmoText;
+    private Image _ammoImage; 
 
     private void Start()
     {
@@ -39,6 +40,7 @@ public class HUD : MonoBehaviour
         _assaultRifleAmmoText = _ammoPanel.transform.Find("AssaultRifleText").GetComponent<Text>();
         _currentAmmoText = _gunPanel.transform.Find("CurrentAmmo").GetComponent<Text>();
         _totalAmmoText = _gunPanel.transform.Find("TotalAmmo").GetComponent<Text>();
+        _ammoImage = _gunPanel.transform.Find("AmmoImage").GetComponent<Image>();
     }
 
     private void Inventory_ItemAdded(object sender, InventoryEvent inventoryEvent)
@@ -96,33 +98,34 @@ public class HUD : MonoBehaviour
 
     private void AmmoSupply_AmmoAdded(object sender, AmmoSupplyEvent ammoSupplyEvent)
     {
-        UpdateAmmoText(ammoSupplyEvent.Type);
+        UpdateAmmoText(ammoSupplyEvent.Name);
     }
 
     private void AmmoSupply_AmmoRemoved(object sender, AmmoSupplyEvent ammoSupplyEvent)
     {
-        UpdateAmmoText(ammoSupplyEvent.Type);
+        UpdateAmmoText(ammoSupplyEvent.Name);
     }
 
     private void UpdateGunText(Gun gun)
     {
         _currentAmmoText.text = gun.AmmoLoaded.ToString();
-        _totalAmmoText.text = AmmoSupply.Instance.GetQuantity(gun.AmmoType).ToString();
+        _totalAmmoText.text = AmmoSupply.Instance.GetQuantity(gun.AmmoType.Name).ToString();
+        _ammoImage.sprite = gun.AmmoType.Image;
     }
 
-    private void UpdateAmmoText(AmmoType type)
+    private void UpdateAmmoText(AmmoName name)
     {
-        if (type == AmmoType.Pistol)
+        if (name == AmmoName.Pistol)
         {
-            _pistolAmmoText.text = AmmoSupply.Instance.GetQuantity(AmmoType.Pistol).ToString();
+            _pistolAmmoText.text = AmmoSupply.Instance.GetQuantity(AmmoName.Pistol).ToString();
         }
-        else if (type == AmmoType.Shotgun)
+        else if (name == AmmoName.Shotgun)
         {
-            _shotgunAmmoText.text = AmmoSupply.Instance.GetQuantity(AmmoType.Shotgun).ToString();
+            _shotgunAmmoText.text = AmmoSupply.Instance.GetQuantity(AmmoName.Shotgun).ToString();
         }
-        else if (type == AmmoType.AssaultRifle)
+        else if (name == AmmoName.AssaultRifle)
         {
-            _assaultRifleAmmoText.text = AmmoSupply.Instance.GetQuantity(AmmoType.AssaultRifle).ToString();
+            _assaultRifleAmmoText.text = AmmoSupply.Instance.GetQuantity(AmmoName.AssaultRifle).ToString();
         }
     }
 

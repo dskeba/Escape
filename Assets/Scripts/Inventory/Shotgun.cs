@@ -8,7 +8,7 @@ public class Shotgun : Gun
         base.Name = "Shotgun";
         base.UseRate = 0.75f;
         base.IsAuto = false;
-        base.AmmoType = AmmoType.Shotgun;
+        base.AmmoType = new ShotgunAmmoType();
         base.MagSize = 5;
         base.AmmoLoaded = 5;
         base.ReloadTime = 2f;
