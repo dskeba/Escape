@@ -150,7 +150,7 @@ public abstract class Gun : Usable
                 _tracerEndPoint = hit.point;
             }
 
-            StartCoroutine(DrawTracerForSeconds(_tracerSeconds, i));
+            //StartCoroutine(DrawTracerForSeconds(_tracerSeconds, i));
         }
         StartCoroutine(DrawMuzzleFlashForSeconds(_muzzleFlashSeconds));
 

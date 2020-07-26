@@ -3,7 +3,7 @@ public class PistolAmmoStack : AmmoStackBase
 {
     public PistolAmmoStack() {
         base.Name = "Pistol Ammo";
-        base.AmmoType = new PistolAmmoType();
+        base.AmmoType = AmmoTypes.PistolAmmoType;
         base.Quantity = 10;
     }
 

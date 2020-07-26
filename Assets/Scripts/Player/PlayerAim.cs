@@ -6,6 +6,8 @@ public class PlayerAim : MonoBehaviour
     private Camera _mainCamera;
     private float _targetAngle;
     [SerializeField]
+    private GameObject _playerBoneObject;
+    [SerializeField]
     private GameObject _playerHipsObject;
     [SerializeField]
     private GameObject _playerTorsoObject;
@@ -20,14 +22,12 @@ public class PlayerAim : MonoBehaviour
         _animator = GetComponent<Animator>();
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         _input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         _input = Vector2.ClampMagnitude(_input, 1);
         _animator.SetFloat("MoveX", _input.x);
         _animator.SetFloat("MoveY", _input.y);
-
-        float yawCamera = _mainCamera.transform.rotation.eulerAngles.y;
 
         Vector3 direction = new Vector3(_input.x, 0f, _input.y).normalized;
         _targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
@@ -39,18 +39,17 @@ public class PlayerAim : MonoBehaviour
         {
             var offset = _targetAngle - 90;
             _targetAngle = -offset;
-        } 
+        }
         else if (_targetAngle < -90)
         {
             var offset = _targetAngle + 90;
             _targetAngle = -offset;
         }
-        transform.eulerAngles = new Vector3(0, yawCamera + _targetAngle + 5f, 0);
-        _playerHipsObject.transform.localEulerAngles = new Vector3(0f, -_targetAngle/2, 0f);
-    }
+        _playerHipsObject.transform.localEulerAngles = new Vector3(0f, -_targetAngle / 2, 0f);
 
-    private void LateUpdate()
-    {
+        float yawCamera = _mainCamera.transform.rotation.eulerAngles.y;
+        _playerBoneObject.transform.eulerAngles = new Vector3(0, yawCamera + _targetAngle + 5f, 0);
+
         float pitchCamera = _mainCamera.transform.rotation.eulerAngles.x;
         if (pitchCamera > 45 && pitchCamera < 90)
         {

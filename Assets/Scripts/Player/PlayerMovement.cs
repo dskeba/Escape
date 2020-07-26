@@ -97,19 +97,7 @@ public class PlayerMovement : MonoBehaviour
         right.y = 0f;
         forward.Normalize();
         right.Normalize();
-        var destination = transform.position + (forward * _input.y + right * _input.x) * Time.deltaTime * _currentSpeed;
+        var destination = transform.position + (forward * _input.y + right * _input.x) * Time.fixedDeltaTime * _currentSpeed;
         _rb.MovePosition(destination);
-
-        PreventIdleMovement();
     }
-
-    private void PreventIdleMovement()
-    {
-        if (_input.y == 0 && _input.x == 0 && _isGrounded)
-        {
-            transform.position = _prevPosition;
-        }
-        _prevPosition = transform.position;
-    }
-
 }
