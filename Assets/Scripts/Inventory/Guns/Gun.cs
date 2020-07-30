@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
-using System.Collections.Generic;
 
 public abstract class Gun : Usable
 {
@@ -15,7 +14,7 @@ public abstract class Gun : Usable
     private GameObject _muzzleFlashObject;
     private Light _muzzleFlashLight;
     private float _muzzleFlashSeconds = 0.015f;
-    private float _tracerSeconds = 0.015f;
+    private float _tracerSeconds = 0.012f;
     private Vector3 _tracerStartPoint;
     private Vector3 _tracerEndPoint;
     private float _tracerMaxDistance = 10000f;
@@ -150,7 +149,7 @@ public abstract class Gun : Usable
                 _tracerEndPoint = hit.point;
             }
 
-            //StartCoroutine(DrawTracerForSeconds(_tracerSeconds, i));
+            StartCoroutine(DrawTracerForSeconds(_tracerSeconds, i));
         }
         StartCoroutine(DrawMuzzleFlashForSeconds(_muzzleFlashSeconds));
 
