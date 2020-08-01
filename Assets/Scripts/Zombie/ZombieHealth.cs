@@ -27,7 +27,7 @@ public class ZombieHealth : HealthBase
     {
         Debug.Log("Zombie has died");
         _animator.SetBool("IsAlive", false);
-        _movement.Stop();
+        _movement.Kill();
     }
 
     protected override void OnBaseRevive() { }
