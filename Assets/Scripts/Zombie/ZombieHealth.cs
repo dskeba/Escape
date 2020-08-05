@@ -4,7 +4,7 @@ public class ZombieHealth : HealthBase
 {
     private GameObject bloodObject;
     private Animator _animator;
-    private ZombieAgent _agent;
+    private Zombie _zombie;
 
     public ZombieHealth() {
         base.MaxHealth = 100;
@@ -15,7 +15,7 @@ public class ZombieHealth : HealthBase
     {
         bloodObject = Resources.Load<GameObject>("Prefabs/Blood");
         _animator = GetComponent<Animator>();
-        _agent = GetComponent<ZombieAgent>();
+        _zombie = GetComponent<Zombie>();
     }
 
     protected override void OnBaseTakeDamage(int damage, Vector3 position)
@@ -27,7 +27,7 @@ public class ZombieHealth : HealthBase
     {
         Debug.Log("Zombie has died");
         _animator.SetBool("IsAlive", false);
-        _agent.Kill();
+        _zombie.Kill();
     }
 
     protected override void OnBaseRevive() { }

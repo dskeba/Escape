@@ -12,7 +12,7 @@ public enum ZombieState
     Dead
 }
 
-public class ZombieAgent : MonoBehaviour
+public class Zombie : MonoBehaviour
 {
     private NavMeshAgent _agent;
     private Animator _animator;
@@ -27,6 +27,7 @@ public class ZombieAgent : MonoBehaviour
     private StateMachine<ZombieState> _stateMachine;
 
     public Transform player;
+    public Transform zombieHead;
 
     void Start()
     {
@@ -38,9 +39,15 @@ public class ZombieAgent : MonoBehaviour
         SetupNavMeshAgent();
     }
 
+    private void SetupNavMeshAgent()
+    {
+        _agent.speed = 8f;
+        _agent.acceleration = 100f;
+        _agent.SetDestination(player.position);
+    }
+
     private void Idle_Enter()
     {
-        Debug.Log("Idle_Enter");
         _animator.SetBool("IsAlive", true);
         _agent.speed = 0f;
         _agent.isStopped = true;
@@ -49,7 +56,6 @@ public class ZombieAgent : MonoBehaviour
 
     private void Aggro_Enter()
     {
-        Debug.Log("Aggro_Enter");
         _animator.SetBool("IsAttacking", false);
         _agent.speed = 8f;
         _agent.SetDestination(player.position);
@@ -58,7 +64,6 @@ public class ZombieAgent : MonoBehaviour
 
     private void Aggro_FixedUpdate()
     {
-        Debug.Log("Aggro_FixedUpdate");
         _animator.SetFloat("Speed", _agent.speed);
         _agent.SetDestination(player.position);
         if (GetDistanceToPlayer() < _distanceToAttack)
@@ -73,7 +78,6 @@ public class ZombieAgent : MonoBehaviour
 
     private void Patrol_Enter()
     {
-        Debug.Log("Patrol_Enter");
         _currentPatrolTime = 0f;
         _agent.speed = 2f;
         _agent.isStopped = false;
@@ -85,7 +89,6 @@ public class ZombieAgent : MonoBehaviour
 
     private void Patrol_FixedUpdate()
     {
-        Debug.Log("Patrol_FixedUpdate");
         _animator.SetFloat("Speed", _agent.speed);
         _currentPatrolTime += Time.fixedDeltaTime;
         if (_currentPatrolTime > _maxPatrolTime)
@@ -118,20 +121,32 @@ public class ZombieAgent : MonoBehaviour
         _stateMachine.ChangeState(ZombieState.Dead);
     }
 
-    private void SetupNavMeshAgent()
-    {
-        _agent.speed = 8f;
-        _agent.acceleration = 100f;
-        _agent.SetDestination(player.position);
-    }
-
-
     private IEnumerator DoAttack()
     {
         _animator.SetBool("IsAttacking", true);
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(1);
+        CheckAttackCollision();
+        yield return new WaitForSeconds(1);
+        CheckAttackCollision();
+        yield return new WaitForSeconds(1);
+        CheckAttackCollision();
+        yield return new WaitForSeconds(2);
         _animator.SetBool("IsAttacking", false);
-        _stateMachine.ChangeState(ZombieState.Idle);
+        if (_stateMachine.State != ZombieState.Dead)
+        {
+            _stateMachine.ChangeState(ZombieState.Idle);
+        }
+    }
+
+    private void CheckAttackCollision()
+    {
+        int layerMask = 1 << 11;
+        Collider[] colliders = Physics.OverlapBox(zombieHead.position, zombieHead.localScale * 1.5f, Quaternion.identity, layerMask);
+        foreach (Collider collider in colliders)
+        {
+            HealthBase health = collider.GetComponent<HealthBase>();
+            health.TakeDamage(1, collider.ClosestPoint(zombieHead.position));
+        }
     }
 
     private float GetDistanceToPatrol()
