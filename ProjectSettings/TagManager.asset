@@ -8,6 +8,18 @@ TagManager:
   - PlayerHips
   - PlayerAbdomen
   - PlayerTorso
+  - MuzzleFlash
+  - Tracer
+  - SpawnPointZombie
+  - HUD
+  - SpawnPointPlayer
+  - ThirdPersonCamera
+  - PlayerHead
+  - CameraFollowPoint
+  - PlayerFirePoint
+  - SpawnPointGun
+  - SpawnPointAmmo
+  - SpawnPointConsumable
   layers:
   - Default
   - TransparentFX
@@ -17,10 +29,10 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
-  - 
+  - Ground
+  - PostProcessing
+  - Collidable
+  - Player
   - 
   - 
   - 
