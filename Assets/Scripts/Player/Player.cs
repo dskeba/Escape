@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField]
     private HUD _hud;
     private GameObject _palmObject;
     private Animator _animator;
@@ -18,6 +17,9 @@ public class Player : MonoBehaviour
         Inventory.Instance.ItemEquipped += Inventory_ItemEquipped;
         Inventory.Instance.ItemUnequipped += Inventory_ItemUnequipped;
         Inventory.Instance.ItemDropped += Inventory_ItemDropped;
+
+        var go = GameObject.FindGameObjectWithTag("HUD");
+        _hud = go.GetComponent<HUD>();
     }
 
     private void Inventory_ItemEquipped(object sender, InventoryEvent inventoryEvent)

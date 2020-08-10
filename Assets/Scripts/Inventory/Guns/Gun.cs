@@ -7,8 +7,7 @@ public abstract class Gun : Usable
     public event EventHandler<GunEvent> Reload;
     public event EventHandler<GunEvent> Shoot;
 
-    public Transform firePoint;
-
+    private Transform _firePoint;
     private GameObject[] _tracerObjects;
     private LineRenderer[] _tracerLineRenderers;
     private GameObject _muzzleFlashObject;
@@ -62,6 +61,8 @@ public abstract class Gun : Usable
         
         _muzzleFlashObject = GameObject.FindGameObjectWithTag("MuzzleFlash");
         _muzzleFlashLight = _muzzleFlashObject.GetComponent<Light>();
+
+        _firePoint = GameObject.FindGameObjectWithTag("PlayerFirePoint").transform;
 
         OnGunStart();
     }
@@ -130,7 +131,7 @@ public abstract class Gun : Usable
             Vector3 aimPoint = new Vector3(aimX, aimY);
             Ray ray = Camera.main.ViewportPointToRay(aimPoint);
 
-            _tracerStartPoint = firePoint.position;
+            _tracerStartPoint = _firePoint.position;
             _tracerEndPoint = ray.direction * _tracerMaxDistance;
             RaycastHit hit;
             int layerMask = 1 << 10;
