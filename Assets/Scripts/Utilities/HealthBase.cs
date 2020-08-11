@@ -1,11 +1,16 @@
 ﻿
+using System;
 using UnityEngine;
 
 public abstract class HealthBase : MonoBehaviour
 {
+    public event EventHandler<HealthEvent> OnDamage;
+    public event EventHandler<HealthEvent> OnHeal;
+
     public HealthBase() { }
 
-    protected abstract void OnBaseTakeDamage(int damage, Vector3 position);
+    protected abstract void OnBaseDamage(int damage, Vector3 position);
+    protected abstract void OnBaseHeal(int damage, Vector3 position);
     protected abstract void OnBaseDie();
     protected abstract void OnBaseRevive();
 
@@ -19,14 +24,33 @@ public abstract class HealthBase : MonoBehaviour
         }
     }
 
-    public void TakeDamage(int damage, Vector3 position)
+    public void Damage(int amount, Vector3 position)
     {
         if (!IsAlive) { return; }
-        CurrentHealth -= damage;
-        OnBaseTakeDamage(damage, position);
+        CurrentHealth -= amount;
+        OnBaseDamage(amount, position);
         if (!IsAlive)
         {
             Die();
+        }
+        if (OnDamage != null)
+        {
+            OnDamage(this, new HealthEvent(this));
+        }
+    }
+
+    public void Heal(int amount, Vector3 position)
+    {
+        if (!IsAlive) { return; }
+        CurrentHealth += amount;
+        if (CurrentHealth > MaxHealth)
+        {
+            CurrentHealth = MaxHealth;
+        }
+        OnBaseHeal(amount, position);
+        if (OnHeal != null)
+        {
+            OnHeal(this, new HealthEvent(this));
         }
     }
 

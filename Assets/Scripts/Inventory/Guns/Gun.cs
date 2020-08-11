@@ -144,7 +144,7 @@ public abstract class Gun : Usable
                     var colliderHealth = parentTransform.GetComponent<HealthBase>();
                     if (colliderHealth != null)
                     {
-                        colliderHealth.TakeDamage(25, hit.point);
+                        colliderHealth.Damage(25, hit.point);
                     }
                 }
                 _tracerEndPoint = hit.point;

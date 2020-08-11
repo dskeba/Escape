@@ -19,12 +19,14 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody _rb;
     private Animator _animator;
     private Vector2 _input;
+    private PlayerStamina _playerStamina;
 
     private void Start()
     {
         _mainCamera = Camera.main;
         _rb = GetComponent<Rigidbody>();
         _animator = GetComponent<Animator>();
+        _playerStamina = GetComponent<PlayerStamina>();
     }
 
     private void Update()
@@ -54,13 +56,13 @@ public class PlayerMovement : MonoBehaviour
         ChromaticAberration chromaticAberration;
         postProcessProfile.TryGetSettings<Vignette>(out vignette);
         postProcessProfile.TryGetSettings<ChromaticAberration>(out chromaticAberration);
-        if (Input.GetButton("Fire3") && _input.y > 0)
+        if (_input.y > 0 && Input.GetButton("Fire3") && _playerStamina.CurrentStamina > 0)
         {
             vignette.intensity.value = 0.2f;
             chromaticAberration.intensity.value = 0.25f;
             _animator.SetBool("Running", true);
             _currentSpeed = _runSpeed;
-
+            _playerStamina.RemoveStamina(Time.deltaTime, Vector3.zero);
         }
         else
         {
@@ -68,6 +70,10 @@ public class PlayerMovement : MonoBehaviour
             chromaticAberration.intensity.value = 0f;
             _animator.SetBool("Running", false);
             _currentSpeed = _walkSpeed;
+            if (_input.y == 0 && _input.x == 0)
+            {
+                _playerStamina.AddStamina(Time.deltaTime / 2, Vector3.zero);
+            }
         }
     }
 

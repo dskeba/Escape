@@ -124,6 +124,7 @@ public class Zombie : MonoBehaviour
     private IEnumerator DoAttack()
     {
         _animator.SetBool("IsAttacking", true);
+        CheckAttackCollision();
         yield return new WaitForSeconds(1);
         CheckAttackCollision();
         yield return new WaitForSeconds(1);
@@ -145,7 +146,7 @@ public class Zombie : MonoBehaviour
         foreach (Collider collider in colliders)
         {
             HealthBase health = collider.GetComponent<HealthBase>();
-            health.TakeDamage(1, collider.ClosestPoint(zombieHead.position));
+            health.Damage(10, collider.ClosestPoint(zombieHead.position));
         }
     }
 

@@ -15,10 +15,15 @@ public class PlayerHealth : HealthBase
         bloodObject = Resources.Load<GameObject>("Prefabs/Blood");
     }
 
-    protected override void OnBaseTakeDamage(int damage, Vector3 position)
+    protected override void OnBaseDamage(int damage, Vector3 position)
     {
         Debug.Log("player has taken " + damage + " damage");
         Instantiate(bloodObject, position, Quaternion.identity);
+    }
+
+    protected override void OnBaseHeal(int damage, Vector3 position)
+    {
+        
     }
 
     protected override void OnBaseDie()
@@ -28,3 +33,4 @@ public class PlayerHealth : HealthBase
 
     protected override void OnBaseRevive() { }
 }
+
