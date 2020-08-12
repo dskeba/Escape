@@ -158,13 +158,11 @@ public class HUD : MonoBehaviour
 
     public void SetPlayerHealth(float amount)
     {
-        Debug.Log("HEALTH AMOUINT -> " + amount);
         _healthBarImage.fillAmount = amount;
     }
 
     public void SetPlayerStamina(float amount)
     {
-        Debug.Log("STAMINA AMOUINT -> " + amount);
         _staminaBarImage.fillAmount = amount;
     }
 }
