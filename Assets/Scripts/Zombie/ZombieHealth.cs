@@ -18,9 +18,14 @@ public class ZombieHealth : HealthBase
         _zombie = GetComponent<Zombie>();
     }
 
-    protected override void OnBaseTakeDamage(int damage, Vector3 position)
+    protected override void OnBaseDamage(int damage, Vector3 position)
     {
         Instantiate(bloodObject, position, Quaternion.identity);
+    }
+
+    protected override void OnBaseHeal(int damage, Vector3 position)
+    {
+
     }
 
     protected override void OnBaseDie()

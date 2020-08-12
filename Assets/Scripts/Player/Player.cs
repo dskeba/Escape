@@ -8,6 +8,8 @@ public class Player : MonoBehaviour
     private GameObject _palmObject;
     private Animator _animator;
     private List<IPickupObject> _pickupObjects;
+    private PlayerHealth _playerHealth;
+    private PlayerStamina _playerStamina;
 
     private void Start()
     {
@@ -17,9 +19,46 @@ public class Player : MonoBehaviour
         Inventory.Instance.ItemEquipped += Inventory_ItemEquipped;
         Inventory.Instance.ItemUnequipped += Inventory_ItemUnequipped;
         Inventory.Instance.ItemDropped += Inventory_ItemDropped;
-
+        _playerHealth = GetComponent<PlayerHealth>();
+        _playerHealth.OnDamage += PlayerHealth_OnDamage;
+        _playerHealth.OnHeal += PlayerHealth_OnHeal;
+        _playerStamina = GetComponent<PlayerStamina>();
+        _playerStamina.OnAddStamina += PlayerStamina_OnAddStamina;
+        _playerStamina.OnRemoveStamina += PlayerStamina_OnRemoveStamina;
         var go = GameObject.FindGameObjectWithTag("HUD");
         _hud = go.GetComponent<HUD>();
+    }
+
+    private void PlayerStamina_OnRemoveStamina(object sender, StaminaEvent staminaEvent)
+    {
+        SetStamina(staminaEvent.Stamina);
+    }
+
+    private void PlayerStamina_OnAddStamina(object sender, StaminaEvent staminaEvent)
+    {
+        SetStamina(staminaEvent.Stamina);
+    }
+
+    private void SetStamina(StaminaBase stamina)
+    {
+        float staminaScalar = (float)stamina.CurrentStamina / (float)stamina.MaxStamina;
+        _hud.SetPlayerStamina(staminaScalar);
+    }
+
+    private void PlayerHealth_OnDamage(object sender, HealthEvent healthEvent)
+    {
+        SetHealth(healthEvent.Health);
+    }
+
+    private void PlayerHealth_OnHeal(object sender, HealthEvent healthEvent)
+    {
+        SetHealth(healthEvent.Health);
+    }
+
+    private void SetHealth(HealthBase health)
+    {
+        float healthScalar = (float)health.CurrentHealth / (float)health.MaxHealth;
+        _hud.SetPlayerHealth(healthScalar);
     }
 
     private void Inventory_ItemEquipped(object sender, InventoryEvent inventoryEvent)

@@ -15,6 +15,8 @@ public class HUD : MonoBehaviour
     private GameObject _gunPanel;
     [SerializeField]
     private GameObject _ammoPanel;
+    [SerializeField]
+    private GameObject _healthPanel;
 
     private Text _messagePanelText;
     private Text _pistolAmmoText;
@@ -22,7 +24,9 @@ public class HUD : MonoBehaviour
     private Text _assaultRifleAmmoText;
     private Text _currentAmmoText;
     private Text _totalAmmoText;
-    private Image _ammoImage; 
+    private Image _ammoImage;
+    private Image _healthBarImage;
+    private Image _staminaBarImage;
 
     private void Start()
     {
@@ -41,6 +45,8 @@ public class HUD : MonoBehaviour
         _currentAmmoText = _gunPanel.transform.Find("CurrentAmmo").GetComponent<Text>();
         _totalAmmoText = _gunPanel.transform.Find("TotalAmmo").GetComponent<Text>();
         _ammoImage = _gunPanel.transform.Find("AmmoImage").GetComponent<Image>();
+        _healthBarImage = _healthPanel.transform.Find("HealthBar").GetComponent<Image>();
+        _staminaBarImage = _healthPanel.transform.Find("StaminaBar").GetComponent<Image>();
     }
 
     private void Inventory_ItemAdded(object sender, InventoryEvent inventoryEvent)
@@ -148,5 +154,15 @@ public class HUD : MonoBehaviour
     public void HideGunPanel()
     {
         _gunPanel.SetActive(false);
+    }
+
+    public void SetPlayerHealth(float amount)
+    {
+        _healthBarImage.fillAmount = amount;
+    }
+
+    public void SetPlayerStamina(float amount)
+    {
+        _staminaBarImage.fillAmount = amount;
     }
 }

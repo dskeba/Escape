@@ -13,6 +13,7 @@ public class SurvivalMode : MonoBehaviour
     {
         LoadPrefabs();
         SpawnGameObjects();
+        SetupCamera();
     }
 
     void LoadPrefabs()
@@ -33,12 +34,7 @@ public class SurvivalMode : MonoBehaviour
     void SpawnGameObjects()
     {
         var playerSpawnPoint = GameObject.FindGameObjectWithTag("SpawnPointPlayer");
-        SpawnPLayer(playerSpawnPoint.transform.position);
-
-        var thirdPersonCamera = GameObject.FindGameObjectWithTag("ThirdPersonCamera");
-        var cm = thirdPersonCamera.GetComponent<CinemachineFreeLook>();
-        cm.Follow = _playerTransform;
-        cm.LookAt = GameObject.FindGameObjectWithTag("CameraFollowPoint").transform;
+        SpawnPlayer(playerSpawnPoint.transform.position);
 
         var zombieSpawnPoints = GameObject.FindGameObjectsWithTag("SpawnPointZombie");
         foreach (GameObject zombieSpawnPoint in zombieSpawnPoints)
@@ -65,7 +61,15 @@ public class SurvivalMode : MonoBehaviour
         }
     }
 
-    void SpawnPLayer(Vector3 position)
+    private void SetupCamera()
+    {
+        var thirdPersonCamera = GameObject.FindGameObjectWithTag("ThirdPersonCamera");
+        var cm = thirdPersonCamera.GetComponent<CinemachineFreeLook>();
+        cm.Follow = _playerTransform;
+        cm.LookAt = GameObject.FindGameObjectWithTag("CameraFollowPoint").transform;
+    }
+
+    void SpawnPlayer(Vector3 position)
     {
         var prefab = Resources.Load<GameObject>("Prefabs/Player");
         var go = Instantiate(prefab, position, Quaternion.identity);
