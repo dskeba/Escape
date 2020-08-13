@@ -70,10 +70,7 @@ public class PlayerMovement : MonoBehaviour
             chromaticAberration.intensity.value = 0f;
             _animator.SetBool("Running", false);
             _currentSpeed = _walkSpeed;
-            if (_input.y == 0 && _input.x == 0)
-            {
-                _playerStamina.AddStamina(Time.deltaTime / 2, Vector3.zero);
-            }
+            _playerStamina.AddStamina(Time.deltaTime / 2, Vector3.zero);
         }
     }
 
