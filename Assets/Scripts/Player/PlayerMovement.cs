@@ -52,22 +52,22 @@ public class PlayerMovement : MonoBehaviour
 
     private void CheckRunning()
     {
-        Vignette vignette;
-        ChromaticAberration chromaticAberration;
-        postProcessProfile.TryGetSettings<Vignette>(out vignette);
-        postProcessProfile.TryGetSettings<ChromaticAberration>(out chromaticAberration);
+        //Vignette vignette;
+        //ChromaticAberration chromaticAberration;
+        //postProcessProfile.TryGetSettings<Vignette>(out vignette);
+        //postProcessProfile.TryGetSettings<ChromaticAberration>(out chromaticAberration);
         if (_input.y > 0 && Input.GetButton("Fire3") && _playerStamina.CurrentStamina > 0)
         {
-            vignette.intensity.value = 0.2f;
-            chromaticAberration.intensity.value = 0.25f;
+            //vignette.intensity.value = 0.2f;
+            //chromaticAberration.intensity.value = 0.25f;
             _animator.SetBool("Running", true);
             _currentSpeed = _runSpeed;
             _playerStamina.RemoveStamina(Time.deltaTime, Vector3.zero);
         }
         else
         {
-            vignette.intensity.value = 0.2f;
-            chromaticAberration.intensity.value = 0f;
+            //vignette.intensity.value = 0.2f;
+            //chromaticAberration.intensity.value = 0f;
             _animator.SetBool("Running", false);
             _currentSpeed = _walkSpeed;
             _playerStamina.AddStamina(Time.deltaTime / 2, Vector3.zero);

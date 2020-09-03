@@ -28,7 +28,7 @@ public class PlayerHealth : HealthBase
 
     protected override void OnBaseDie()
     {
-        Debug.Log("Player has died");
+        
     }
 
     protected override void OnBaseRevive() { }

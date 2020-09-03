@@ -30,7 +30,6 @@ public class ZombieHealth : HealthBase
 
     protected override void OnBaseDie()
     {
-        Debug.Log("Zombie has died");
         _animator.SetBool("IsAlive", false);
         _zombie.Kill();
     }
