@@ -11612,7 +11612,7 @@ TerrainCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 535680234}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 79027cf6ffedc974e8f310d0089d1c3f, type: 2}
   m_Enabled: 1
   m_TerrainData: {fileID: 15600000, guid: 8c476bb911513a04594ed2174b7aed28, type: 2}
   m_EnableTreeColliders: 1
@@ -40921,7 +40921,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2112665265}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -16.83, y: 4.68, z: -1.32}
+  m_LocalPosition: {x: 75.3, y: 4.68, z: 3.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 19507063}
