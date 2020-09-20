@@ -6,6 +6,7 @@ public abstract class HealthBase : MonoBehaviour
 {
     public event EventHandler<HealthEvent> OnDamage;
     public event EventHandler<HealthEvent> OnHeal;
+    public event EventHandler<HealthEvent> OnDie;
 
     public HealthBase() { }
 
@@ -57,6 +58,10 @@ public abstract class HealthBase : MonoBehaviour
     public void Die()
     {
         OnBaseDie();
+        if (OnDie != null)
+        {
+            OnDie(this, new HealthEvent(this));
+        }
     }
 
     public void Revive()

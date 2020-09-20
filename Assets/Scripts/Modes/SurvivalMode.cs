@@ -82,6 +82,14 @@ public class SurvivalMode : MonoBehaviour
         var go = Instantiate(prefab, position, Quaternion.identity);
         var zombie = go.GetComponent<Zombie>();
         zombie.player = _playerTransform;
+        var zombieHealth = go.GetComponent<ZombieHealth>();
+        zombieHealth.OnDie += ZombieHealth_OnDie;
+    }
+
+    private void ZombieHealth_OnDie(object sender, HealthEvent e)
+    {
+        var zombie = e.Health.gameObject.GetComponent<Zombie>();
+        //zombie.gameObject.SetActive(false);
     }
 
     void SpawnRandomGun(Vector3 position)
