@@ -6,7 +6,7 @@ public class PlayerStamina : StaminaBase
 
     public PlayerStamina()
     {
-        base.MaxStamina = 10.0f;
+        base.MaxStamina = 15.0f;
         base.CurrentStamina = base.MaxStamina;
     }
 
